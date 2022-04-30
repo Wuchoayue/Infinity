@@ -24,6 +24,9 @@ set(PROJECT_SOURCES
     playercontrols.h playercontrols.cpp
     sonic.h sonic.cpp
     player.h player.cpp
+    durationslider.h durationslider.cpp
+    playlistmodel.h playlistmodel.cpp
+    playlistview.h playlistview.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

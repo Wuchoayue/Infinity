@@ -30,17 +30,11 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     delMediaDir_button = new QToolButton(this);
     delMediaDir_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarUnshadeButton));
     mediaItem_tableView->setVisible(false);
-    closeMediaItem_button = new QToolButton(this);
-    closeMediaItem_button->setIcon(style()->standardIcon(QStyle::SP_ArrowLeft));
     mediaItem_label = new QLabel("粤语歌曲", this);
     addMediaItem_button = new QToolButton(this);
     addMediaItem_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarShadeButton));
     delMediaItem_button = new QToolButton(this);
     delMediaItem_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarUnshadeButton));
-    closeMediaItem_button->setVisible(false);
-    mediaItem_label->setVisible(false);
-    addMediaItem_button->setVisible(false);
-    delMediaItem_button->setVisible(false);
     QHBoxLayout *layout_topleft = new QHBoxLayout;
     layout_topleft->setContentsMargins(0, 0, 0, 0);
     layout_topleft->addWidget(mediaDir_label,2);
@@ -52,7 +46,6 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     layout_left->addWidget(mediaDir_listWidget, 6);
     QHBoxLayout *layout_tabletop = new QHBoxLayout;
     layout_tabletop->setContentsMargins(0, 0, 0, 0);
-    layout_tabletop->addWidget(closeMediaItem_button, 1);
     layout_tabletop->addWidget(mediaItem_label, 1);
     layout_tabletop->addWidget(addMediaItem_button, 1);
     layout_tabletop->addWidget(delMediaItem_button, 1);
@@ -65,16 +58,19 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     loadMediaDir();
     playerControls = new PlayerControls(this);
     video_videoWidget = new QVideoWidget(this);
+    playList_listView = new PlayListView(this);
     QHBoxLayout *layout_center = new QHBoxLayout;
     layout_center->setContentsMargins(0, 0, 0, 0);
     layout_center->addLayout(layout_left, 1);
     layout_center->addLayout(layout_table, 4);
     layout_center->addWidget(video_videoWidget, 4);
+    layout_center->addWidget(playList_listView, 1);
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addLayout(layout_center, 9);
     layout->addWidget(playerControls, 1);
     setLayout(layout);
+    changeMediaDirShow();
     player = new Player();
     duration_timer = new QTimer(this);
     connect(duration_timer, &QTimer::timeout, this, [=] {
@@ -100,8 +96,6 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     connect(addMediaItem_button, &QToolButton::clicked, this, &InfinityPlayer::on_addMediaItem_button_clicked);
     //删除目录项
     connect(delMediaItem_button, &QToolButton::clicked, this, &InfinityPlayer::on_delMediaItem_button_clicked);
-    //关闭目录项表
-    connect(closeMediaItem_button, &QToolButton::clicked, this, &InfinityPlayer::closeMediaItem);
     connect(playerControls, &PlayerControls::playStatus_signal, this, [=] {
         if(isPlay) {
             playerControls->playStatus_button->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -116,6 +110,7 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
         int value = playerControls->volume_slider->value();
         player->SetVolume(value);
     });
+    connect(playerControls, &PlayerControls::changeMediaDirShow_signal, this, &InfinityPlayer::changeMediaDirShow);
     connect(playerControls, &PlayerControls::duration_signal, this, [&](int value) {
         duration_timer->stop();
         qDebug() << "jump:" << value;
@@ -129,7 +124,6 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
         QModelIndex index = mediaItem_tableView->currentIndex();
         QString path = mediaItem_sqlQueryModel.index(index.row(), 1).data().toString();
         player->Play(path.toStdString().c_str(), (void*)video_videoWidget->winId());
-        closeMediaItem();
         isPlay = true;
         playerControls->playStatus_button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         player->SetVolume(50);
@@ -223,11 +217,17 @@ void InfinityPlayer::addMediaDir()
             dirname += "_0";
         }
         mediaDir_listWidget->addItem(dirname);
+        mediaDir_listWidget->setCurrentRow(mediaDir_listWidget->count() - 1);
+        showMediaItem(mediaDir_listWidget->currentItem());
     }
 }
 
 void InfinityPlayer::on_delMediaDir_button_clicked()
 {
+    if(mediaDir_listWidget->count() == 1) {
+        qDebug() << "至少有一个目录!";
+        return;
+    }
     QListWidgetItem *item = mediaDir_listWidget->currentItem();
     QString dirname = item->data(0).toString();
     QString sql = QString("delete from MediaItem where dirname = '%1'").arg(dirname);
@@ -235,12 +235,8 @@ void InfinityPlayer::on_delMediaDir_button_clicked()
         sql = QString("delete from MediaDir where dirname = '%1'").arg(dirname);
         if(infinityPlayer_sqlQuery->exec(sql)) {
             mediaDir_listWidget->takeItem(mediaDir_listWidget->currentRow());
-            mediaItem_tableView->setVisible(false);
-            mediaItem_label->setVisible(false);
-            addMediaItem_button->setVisible(false);
-            delMediaItem_button->setVisible(false);
-            closeMediaItem_button->setVisible(false);
-            video_videoWidget->setVisible(true);
+            mediaDir_listWidget->setCurrentRow(0);
+            showMediaItem(mediaDir_listWidget->currentItem());
         }
         else {
             qDebug() << sql;
@@ -274,13 +270,7 @@ void InfinityPlayer::changeMediaDir()
 void InfinityPlayer::showMediaItem(QListWidgetItem *item)
 {
     QString dirname = item->data(0).toString();
-    mediaItem_tableView->setVisible(true);
-    mediaItem_label->setVisible(true);
-    addMediaItem_button->setVisible(true);
-    delMediaItem_button->setVisible(true);
-    closeMediaItem_button->setVisible(true);
     mediaItem_label->setText(dirname);
-    video_videoWidget->setVisible(false);
     if(isPlay) {
         player->Pause();
         isPlay = false;
@@ -352,20 +342,27 @@ void InfinityPlayer::on_mediaDir_menu(const QPoint &pos)
     }
 }
 
-void InfinityPlayer::closeMediaItem()
+void InfinityPlayer::changeMediaDirShow()
 {
-    mediaItem_tableView->setVisible(false);
-    mediaItem_label->setVisible(false);
-    addMediaItem_button->setVisible(false);
-    delMediaItem_button->setVisible(false);
-    closeMediaItem_button->setVisible(false);
-    video_videoWidget->setVisible(true);
+    mediaDir_listWidget->setCurrentRow(0);
+    mediaItem_label->setText(mediaDir_listWidget->currentItem()->text());
+    mediaItem_tableView->setVisible(isMediaDirShow);
+    mediaItem_label->setVisible(isMediaDirShow);
+    addMediaItem_button->setVisible(isMediaDirShow);
+    delMediaItem_button->setVisible(isMediaDirShow);
+    mediaDir_label->setVisible(isMediaDirShow);
+    mediaDir_listWidget->setVisible(isMediaDirShow);
+    addMediaDir_button->setVisible(isMediaDirShow);
+    delMediaDir_button->setVisible(isMediaDirShow);
+    video_videoWidget->setVisible(!isMediaDirShow);
+    playList_listView->setVisible(!isMediaDirShow);
+    isMediaDirShow = !isMediaDirShow;
 }
 
 void InfinityPlayer::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Left) {
-//        player->Backward();
+        //        player->Backward();
         emit playerControls->playStatus_signal();
         qDebug() << "left";
     }

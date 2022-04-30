@@ -13,6 +13,7 @@
 #include <string.h>
 #include <QKeyEvent>
 #include <QTimer>
+#include "playlistview.h"
 #include "playercontrols.h"
 #include "player.h"
 
@@ -28,6 +29,7 @@ class QVideoWidget;
 class QLineEdit;
 class QToolButton;
 class QLineEdit;
+class PlayListModel;
 QT_END_NAMESPACE
 
 class InfinityPlayer : public QWidget
@@ -52,8 +54,8 @@ public:
     //删除目录项
     void on_delMediaItem_button_clicked();
     void on_mediaDir_menu(const QPoint &pos);
-    //关闭目录项
-    void closeMediaItem();
+    //改变目录界面显示状态
+    void changeMediaDirShow();
 
 private:
     QSqlDatabase infinityPlayer_dataBase;  //数据库
@@ -68,14 +70,15 @@ private:
     QLabel *mediaItem_label;
     QToolButton *addMediaItem_button;    //添加目录项按钮
     QToolButton *delMediaItem_button;    //删除目录项按钮
-    QToolButton *closeMediaItem_button; //关闭目录项目录
     QSqlQueryModel mediaItem_sqlQueryModel;  //存放目录查询结果
+    bool isMediaDirShow = false;    //当前是否打开了目录
     PlayerControls *playerControls;     //控制部分
     QVideoWidget *video_videoWidget;    //播放器视频通道
     Player *player;   //后端播放模块
     bool isPlay = false;    //是否在播放
     double mediaDuration = -1;   //音视频全长
     QTimer *duration_timer; //进度定时器
+    PlayListView *playList_listView;  //播放列表
 
 protected:
     void keyPressEvent(QKeyEvent *event);   //键盘事件
