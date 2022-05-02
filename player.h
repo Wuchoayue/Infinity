@@ -62,13 +62,12 @@ struct VideoInf
     AVCodecContext *vCodecCtx, *aCodecCtx;//视音频解码器上下文
     AVCodec *vCodec, *aCodec;//视音频解码器
     AVStream *vStream, *aStream;//视音频流
-    SDL_Thread *parse_tid, *decode_tid, *refresh_tid;//视频文件解析线程、视频流解码线程id和视频刷新线程id
+    SDL_Thread *parse_tid, *decode_video_tid, *decode_audio_tid, *refresh_tid;//视频文件解析线程、视音频流解码线程id和视频刷新线程id
     int volume;//音量大小，范围为[0, SDL_MIX_MAXVOLUME]
     int fullScreen;//全屏状态
     double speed;//播放速度
     int pause;//是否暂停
     int seeking;//跳转播放处理中的标志
-    int seek_flag;//快进/快退的标志
     double tar_pts;//跳转播放的目标时间戳
     SDL_mutex *screen_mutex;//屏幕锁，用于改变屏幕大小等过程
     SDL_Window *screen;//视频播放窗口
@@ -77,10 +76,9 @@ struct VideoInf
 
     //视频相关数据
     VideoPicture picture_queue[PICTURE_QUEUE_SIZE];//图像缓存队列，存放解码并转码后用于播放的图像数据
-//    VideoPicture picture_buf;//保存当前正在显示的图像缓存，用于刷新界面
     int picq_ridx, picq_widx, picq_size;//图像缓存队列的读写下标以及队列的大小
     SDL_mutex *picq_mutex;//图像缓存队列互斥锁
-    SDL_cond *picq_cond_write;//图像缓存队列写同步信号量
+    SDL_cond *picq_cond_read, *picq_cond_write;//图像缓存队列读写同步信号量
     SDL_mutex *refresh_mutex;//用于视频刷新线程的互斥锁
     SDL_cond *refresh_cond;//用于控制刷新下一帧的同步信号量
     PacketQueue video_queue;//视频压缩数据包队列
@@ -93,8 +91,10 @@ struct VideoInf
     //音频相关数据
     PacketQueue audio_queue;//音频压缩数据包队列
     AVPacket aPacket;//正在解码的音频数据包
-    Uint8 *audio_buf;//正在播放的音频数据
+    Uint8 *audio_buf;//正在播放的音频数据缓存
     int audio_buf_idx, audio_buf_size;//已经送入播放器缓存的解码数据量和该帧总的数据量
+	SDL_mutex *abuf_mutex;//音频数据缓存的互斥锁
+	SDL_cond *abuf_cond_read, *abuf_cond_write;//音频数据缓存的读写同步信号量
     SwrContext *swrCtx;//音频重采样上下文
     double audio_pts;//当前解码音频帧的时间戳（播放完成时），经过时基换算
 };

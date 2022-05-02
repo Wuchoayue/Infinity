@@ -13,15 +13,15 @@ public:
     ~DurationSlider();
 
 signals:
-    void sliderMoved(int);
+    void sliderReleasedAt(int value);
 
 public:  //mouse
-//    void mousePressEvent(QMouseEvent *event);  //单击
-//    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);  //单击
+    void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-//    bool m_isMoving;
-//    int m_value;
-//    bool m_mousePress;
+    bool isMoving;
+    int m_value;
+    bool mousePress;
 };
 
 #endif // DURATIONSLIDER_H

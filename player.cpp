@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include <math.h>
 #include <iostream>
+#include <QDebug>
 #include <stdlib.h>
 #include "player.h"
 #include "sonic.h"
@@ -30,7 +31,7 @@ void ClearPacketQueue(PacketQueue *q)
         {
             av_packet_unref(&pktList->pkt);
         }
-        av_free(pktList);
+        if(pktList) av_free(pktList);
     }
     q->size = 0;
     q->tail = q->head = NULL;
@@ -86,11 +87,6 @@ int PacketQueueGet(VideoInf *av, PacketQueue *q, AVPacket *pkt)
             SDL_UnlockMutex(q->qMutex);
             return -1;
         }
-        if(av->pause)
-        {
-            SDL_UnlockMutex(q->qMutex);
-            return -2;
-        }
     }
     if (q->head == NULL)
     {
@@ -109,6 +105,32 @@ int PacketQueueGet(VideoInf *av, PacketQueue *q, AVPacket *pkt)
     SDL_UnlockMutex(q->qMutex);
 
     return 0;
+}
+
+//清空图像缓存队列
+void ClearPictureQueue(VideoInf *av)
+{
+	SDL_LockMutex(av->picq_mutex);
+	while (av->picq_size)
+	{
+		av->picq_ridx++;
+		if (av->picq_ridx >= PICTURE_QUEUE_SIZE)
+		{
+			av->picq_ridx = 0;
+		}
+		av->picq_size--;
+	}
+	SDL_CondSignal(av->picq_cond_write);
+	SDL_UnlockMutex(av->picq_mutex);
+}
+
+//清空音频缓存
+void ClearAudioBuf(VideoInf *av)
+{
+	SDL_LockMutex(av->abuf_mutex);
+	av->audio_buf_size = 0;
+	SDL_CondSignal(av->abuf_cond_write);
+	SDL_UnlockMutex(av->abuf_mutex);
 }
 
 //分配图像缓存空间，已经正确分配就不做任何操作
@@ -175,67 +197,97 @@ int ChangeAudioSpeed(VideoInf *av, int nb_samples)
 }
 
 //解码一帧音频数据，保存到av->audio_buf中
-int DecodeAudioPacket(VideoInf *av)
+int DecodeAudioThread(void *user_data)
 {
-    if (av->quit)
-    {
-        return -1;
-    }
+	VideoInf *av = (VideoInf *)user_data;
 
     AVPacket *pkt = &av->aPacket;
     AVFrame *frame = av_frame_alloc();
 
     for (;;)
     {
-        //从解码器中解码得到数据，进行处理后交由音频回调函数送入声卡播放，否则到队列中取包
-        while (avcodec_receive_frame(av->aCodecCtx, frame) == 0)
-        {
-            //重采样
-            int nb_channels = av_get_channel_layout_nb_channels(AV_CH_LAYOUT_STEREO);
-            int nb_samples = swr_convert(av->swrCtx, (uint8_t **)&av->audio_buf, MAX_AUDIO_BUF_SIZE,
-                (const uint8_t **)frame->data, frame->nb_samples);
-            av->audio_pts += 1.0 * nb_samples / av->aCodecCtx->sample_rate;
+		if (pkt->data)//pkt中有数据，释放缓存空间，防止内存泄露
+		{
+			av_packet_unref(pkt);
+		}
+		if (PacketQueueGet(av, &av->audio_queue, pkt) != 0)//从队列中读取压缩数据包
+		{
+			printf("get pkt failed!\n");
+			if (av->quit)
+			{
+				printf("user shuts the video!\n");
+				av_frame_free(&frame);
+				av_packet_free(&pkt);
+				return 0;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		//读取到跳转处理的标志，重置解码器
+		if (pkt->data == flush_pkt.data)
+		{
+			avcodec_flush_buffers(av->aCodecCtx);
+			ClearAudioBuf(av);
+			continue;
+		}
 
-            //进行变速处理
-            nb_samples = ChangeAudioSpeed(av, nb_samples);
+		if (avcodec_send_packet(av->aCodecCtx, pkt) == 0)//将拿到的数据包送到解码器
+		{
+			if (pkt->pts != AV_NOPTS_VALUE)//更新音频时间戳
+			{
+				av->audio_pts = pkt->pts * av_q2d(av->aStream->time_base);
+			}
 
-            //计算audio_buf大小
-            av->audio_buf_size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples, AV_SAMPLE_FMT_S16, 1);
-            if (av->audio_buf_size <= 0)
-            {
-                continue;
-            }
-            av->audio_buf_idx = 0;
+			//从解码器中解码得到数据，进行处理后交由音频回调函数送入声卡播放，否则到队列中取包
+			while (avcodec_receive_frame(av->aCodecCtx, frame) == 0)
+			{
+				av->audio_pts += 1.0 * frame->nb_samples / av->aCodecCtx->sample_rate;
 
-            av_frame_free(&frame);
-            return 0;
-        }
+				//如果是当前解码数据的播放时间小于av中记录的tar_pts，说明处于跳转过程中，需要忽略关键帧到tar_pts之间的数据
+				if (av->audio_pts < av->tar_pts)
+				{
+					continue;
+				}
 
-        //正在解码数据包已经解码完成，需要读取下一个包
-        if (pkt->data)//pkt中有数据，释放缓存空间，防止内存泄露
-        {
-            av_packet_unref(pkt);
-        }
-        if (PacketQueueGet(av, &av->audio_queue, pkt) != 0)//从队列中读取压缩数据包
-        {
-            printf("get pkt failed!\n");
-            av_frame_free(&frame);
-            return -1;
-        }
-        //读取到跳转处理的标志，重置解码器
-        if (pkt->data == flush_pkt.data)
-        {
-            avcodec_flush_buffers(av->aCodecCtx);
-            continue;
-        }
-        avcodec_send_packet(av->aCodecCtx, pkt);//将拿到的数据包送到解码器
+				//检查队列是否还有数据未播放
+				SDL_LockMutex(av->abuf_mutex);
+				while (av->audio_buf_idx < av->audio_buf_size)
+				{
+					SDL_CondWait(av->abuf_cond_write, av->abuf_mutex);
+					if (av->quit)
+					{
+						printf("user shuts the video!\n");
+						av_frame_free(&frame);
+						av_packet_unref(pkt);
+						SDL_UnlockMutex(av->abuf_mutex);
+						return 0;
+					}
+				}
+				SDL_UnlockMutex(av->abuf_mutex);
 
-        if (pkt->pts != AV_NOPTS_VALUE)//更新音频时间戳
-        {
-            av->audio_pts = pkt->pts * av_q2d(av->aStream->time_base);
-        }
+				//重采样
+				int nb_channels = av_get_channel_layout_nb_channels(AV_CH_LAYOUT_STEREO);
+				int nb_samples = swr_convert(av->swrCtx, (uint8_t **)&av->audio_buf, MAX_AUDIO_BUF_SIZE,
+					(const uint8_t **)frame->data, frame->nb_samples);
+
+				nb_samples = ChangeAudioSpeed(av, nb_samples);
+
+				//进行变速处理，并计算处理完的buf_size，通知音频回调函数可以访问缓存了
+				SDL_LockMutex(av->abuf_mutex);
+				av->audio_buf_size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples, AV_SAMPLE_FMT_S16, 1);
+				if (av->audio_buf_size <= 0)
+				{
+					SDL_UnlockMutex(av->abuf_mutex);
+					continue;
+				}
+				av->audio_buf_idx = 0;
+				SDL_CondSignal(av->abuf_cond_read);
+				SDL_UnlockMutex(av->abuf_mutex);
+			}
+		}
     }
-    av_frame_free(&frame);
     return -1;
 }
 
@@ -247,15 +299,40 @@ void AudioCallback(void *user_data, Uint8 *stream, int len)
     SDL_memset(stream, 0, len);
     while (len > 0)
     {
-        if (av->audio_buf_idx >= av->audio_buf_size)//缓存数据已全部送入播放器缓存，需要重新解码压缩数据包
-        {
-            //获取压缩数据包失败，
-            if (DecodeAudioPacket(av) != 0)
-            {
-                return;
-            }
-        }
+		//检查音频缓存是否有数据待播放
+		SDL_LockMutex(av->abuf_mutex);
+		while (av->audio_buf_idx >= av->audio_buf_size)
+		{
+			SDL_CondWait(av->abuf_cond_read, av->abuf_mutex);
+			if (av->quit)
+			{
+				printf("user shuts the video!\n");
+				SDL_UnlockMutex(av->abuf_mutex);
+				return;
+			}
+		}
+		SDL_UnlockMutex(av->abuf_mutex);
+
+		//如果处于暂停状态且该帧数据应该播放
+		if(av->pause && av->audio_pts >= av->tar_pts && av->seeking != 2)
+		{
+			return;
+		}
+
+		//如果是当前播放时间小于av中记录的tar_pts，说明处于跳转过程中，需要忽略tar_pts之前的数据
+		//正在跳转中，尽快处理下一帧
+		if (av->seeking == 2)
+		{
+			SDL_LockMutex(av->abuf_mutex);
+			av->audio_buf_idx = av->audio_buf_size;
+			SDL_CondSignal(av->abuf_cond_write);
+			SDL_UnlockMutex(av->abuf_mutex);
+			SDL_Delay(10);
+			continue;
+		}
+
         //将解码的数据写入播放器缓存中
+		SDL_LockMutex(av->abuf_mutex);
         int write_len = av->audio_buf_size - av->audio_buf_idx;
         if (write_len > len)
         {
@@ -265,6 +342,8 @@ void AudioCallback(void *user_data, Uint8 *stream, int len)
         stream += write_len;
         len -= write_len;
         av->audio_buf_idx += write_len;
+		SDL_CondSignal(av->abuf_cond_write);
+		SDL_UnlockMutex(av->abuf_mutex);
     }
 }
 
@@ -290,7 +369,7 @@ double synchronize_video(VideoInf *av, AVFrame *src_frame, double pts)
 }
 
 //视频解码线程函数
-int DecodeThread(void *user_data)
+int DecodeVideoThread(void *user_data)
 {
     VideoInf *av = (VideoInf *)user_data;
     AVFrame *frame = av_frame_alloc();
@@ -310,6 +389,7 @@ int DecodeThread(void *user_data)
             {
                 printf("user shuts the video!\n");
                 av_frame_free(&frame);
+				av_packet_unref(pkt);
                 av_packet_free(&pkt);
                 return 0;
             }
@@ -321,6 +401,7 @@ int DecodeThread(void *user_data)
         //读取到跳转处理的标志，重置解码器
         if (pkt->data == flush_pkt.data)
         {
+			ClearPictureQueue(av);
             avcodec_flush_buffers(av->vCodecCtx);
             continue;
         }
@@ -330,6 +411,14 @@ int DecodeThread(void *user_data)
             //一个pkt中可能有多帧数据，需要循环读取
             while (avcodec_receive_frame(av->vCodecCtx, frame) == 0)
             {
+				double pts = frame->pts * av_q2d(av->vStream->time_base);
+
+				//如果是当前播放时间小于av中记录的tar_pts，说明处于跳转过程中，需要忽略关键帧到tar_pts之间的数据
+				if (pts < av->tar_pts)
+				{
+					continue;
+				}
+
                 //检查队列是否已满
                 SDL_LockMutex(av->picq_mutex);
                 while (av->picq_size >= PICTURE_QUEUE_SIZE)
@@ -340,7 +429,7 @@ int DecodeThread(void *user_data)
                         printf("user shuts the video!\n");
                         av_frame_free(&frame);
                         av_packet_unref(pkt);
-                        av_packet_free(&pkt);
+						av_packet_free(&pkt);
                         SDL_UnlockMutex(av->picq_mutex);
                         return 0;
                     }
@@ -353,7 +442,6 @@ int DecodeThread(void *user_data)
                 AllocatePicture(av, vp);
 
                 //获取该帧的时间戳
-                double pts = frame->pts * av_q2d(av->vStream->time_base);
                 vp->pts = synchronize_video(av, frame, pts);
 
                 //对图像进行格式转换
@@ -368,6 +456,7 @@ int DecodeThread(void *user_data)
                 {
                     av->picq_widx = 0;
                 }
+				SDL_CondSignal(av->picq_cond_read);
                 SDL_UnlockMutex(av->picq_mutex);
             }
         }
@@ -445,19 +534,35 @@ void VideoRefresh(void *user_data)
     }
 
     //1.-------刷新显示当前帧到屏幕上---------
-    //检查队列是否有数据或者处于暂停状态
-    if (av->pause || av->picq_size == 0)
-    {
-        VideoRefreshTimer(av, 1);//1ms后再尝试
-        return;
-    }
+	//检查图像缓存队列是否为空
+	SDL_LockMutex(av->picq_mutex);
+	while (av->picq_size == 0)
+	{
+		SDL_CondWait(av->picq_cond_read, av->picq_mutex);
+		if (av->quit)
+		{
+			printf("user shuts the video!\n");
+			SDL_UnlockMutex(av->picq_mutex);
+			return;
+		}
+	}
+    SDL_UnlockMutex(av->picq_mutex);
 
-    //将图片显示到屏幕上
-    VideoPicture *vp = &av->picture_queue[av->picq_ridx];
-//    AllocatePicture(av, &av->picture_buf);
-//    *(av->picture_buf.frameYUV) = *(vp->frameYUV);
-//    av_frame_copy(av->picture_buf.frameYUV, vp->frameYUV);
-    DisplayPicture(av, vp);
+	VideoPicture *vp = &av->picture_queue[av->picq_ridx];
+
+	//检查是否处于暂停状态且该图片需正常显示
+	if (av->pause && vp->pts >= av->tar_pts && av->seeking != 2)
+	{
+        DisplayPicture(av, vp);//将图片显示到屏幕上
+		VideoRefreshTimer(av, 10);//10ms后再尝试
+		return;
+	}
+
+	//判断图片是否需要丢弃
+	if (vp->pts >= av->tar_pts)
+	{
+        DisplayPicture(av, vp);//将图片显示到屏幕上
+	}
     av->video_time = av_gettime() / 1000000.0;//更新当前帧显示时对应的系统时间
 
     //改变缓存队列大小和移动读指针
@@ -480,6 +585,12 @@ void VideoRefresh(void *user_data)
     av->pre_vdelay = delay;
     av->pre_vpts = vp->pts;
 
+	//当前帧应该忽略，快速处理下一帧
+	if (av->seeking == 2)
+	{
+		delay = 0;
+	}
+
     //判断视频时间戳和音频时间戳的相对快慢，并进行相应调整
     double diff = vp->pts - GetAudioTime(av);
     if (fabs(diff) < 5)//时差过大的话就已经不是同步问题了
@@ -493,13 +604,17 @@ void VideoRefresh(void *user_data)
             delay = 2 * delay;
         }
     }
+	else
+	{
+		delay = 0;
+	}
 
     //根据调整得到的delay开启定时器
     av->video_time += delay / av->speed;
     double actual_delay = av->video_time - av_gettime() / 1000000.0;
-    if (actual_delay < 0)
+    if (actual_delay < 0.010)
     {
-        actual_delay = 0;
+        actual_delay = 0.010;
     }
     VideoRefreshTimer(av, int(actual_delay * 1000 + 0.5));
 }
@@ -518,8 +633,6 @@ void JumpToPts(VideoInf *av, double pts)
     }
 
     av->tar_pts = pts;
-    double cur_pts = GetAudioTime(av);
-    av->seek_flag = av->tar_pts < cur_pts ? AVSEEK_FLAG_BACKWARD : 0;
 }
 
 //全屏/退出全屏
@@ -554,6 +667,18 @@ void Video_Quit(VideoInf *av)
     {
         SDL_CondSignal(av->picq_cond_write);
     }
+	if (av->picq_cond_read)
+	{
+		SDL_CondSignal(av->picq_cond_read);
+	}
+	if (av->abuf_cond_read)
+	{
+		SDL_CondSignal(av->abuf_cond_read);
+	}
+	if (av->abuf_cond_write)
+	{
+		SDL_CondSignal(av->abuf_cond_write);
+	}
     if (av->video_queue.qCond)
     {
         SDL_CondSignal(av->video_queue.qCond);
@@ -672,6 +797,7 @@ int ParseThread(void *user_data)
         CreatePacketQueue(&av->video_queue);
         av->picq_mutex = SDL_CreateMutex();
         av->picq_cond_write = SDL_CreateCond();
+		av->picq_cond_read = SDL_CreateCond();
         av->refresh_mutex = SDL_CreateMutex();
         av->refresh_cond = SDL_CreateCond();
         while (!av->screen)
@@ -683,7 +809,7 @@ int ParseThread(void *user_data)
         //设置视频图像格式转换规则
         av->swsCtx = sws_getContext(av->width, av->height, av->vCodecCtx->pix_fmt,
             av->width, av->height, AV_PIX_FMT_YUV420P, SWS_BILINEAR, NULL, NULL, NULL);
-        av->decode_tid = SDL_CreateThread(DecodeThread, "DecodeThread", av);//创建视频解码线程
+        av->decode_video_tid = SDL_CreateThread(DecodeVideoThread, "DecodeVideoThread", av);//创建视频解码线程
         av->refresh_tid = SDL_CreateThread(VideoRefreshThread, "VideoRefreshThread", av);//创建视频刷新线程
         VideoRefreshTimer(av, 20);
         av->video_pts = 0;
@@ -715,6 +841,9 @@ int ParseThread(void *user_data)
         av->audio_buf = (Uint8 *)av_mallocz(MAX_AUDIO_BUF_SIZE * 2);
         av->audio_buf_idx = 0;
         av->audio_buf_size = 0;
+		av->abuf_mutex = SDL_CreateMutex();
+		av->abuf_cond_read = SDL_CreateCond();
+		av->abuf_cond_write = SDL_CreateCond();
         //设置重采样规则
         int64_t in_channel_layout = av_get_default_channel_layout(av->aCodecCtx->channels);
         av->swrCtx = swr_alloc();
@@ -735,6 +864,7 @@ int ParseThread(void *user_data)
             printf("Could not open audio player!\n");
             return -1;
         }
+		av->decode_audio_tid = SDL_CreateThread(DecodeAudioThread, "DecodeAudioThread", av);//创建视频解码线程
         SDL_PauseAudio(0);
     }
 
@@ -762,8 +892,8 @@ int ParseThread(void *user_data)
             int64_t tar_pts = av->tar_pts * AV_TIME_BASE;
             tar_pts = av_rescale_q(tar_pts, tb, av->avFormatCtx->streams[stream_idx]->time_base);
 
-            //跳转到目标时间戳
-            av_seek_frame(av->avFormatCtx, stream_idx, tar_pts, av->seek_flag);
+            //跳转到目标时间最近的关键帧
+            av_seek_frame(av->avFormatCtx, stream_idx, tar_pts, AVSEEK_FLAG_BACKWARD);
 
             //清空队列缓存并且加入flush_pkt包通知音视频解码线程有跳转操作
             if (av->video_idx >= 0)
@@ -830,6 +960,14 @@ void Free_Picture_Queue(VideoInf *av)
     }
 }
 
+//允许跳转操作定时器回调函数，防止用户频繁执行跳转操作
+static Uint32 SeekEnableTimerCallBack(Uint32 interval, void *user_data)
+{
+	VideoInf *av = (VideoInf *)user_data;
+	av->seeking = 0;
+	return 0;
+}
+
 //创建视频
 int CreateVideo(VideoInf *av, void * wid = NULL)
 {
@@ -883,28 +1021,9 @@ int CreateVideo(VideoInf *av, void * wid = NULL)
                     av->seeking = 1;
                     while (av->seeking != 2)
                     {
-                        SDL_Delay(5);
+                        SDL_Delay(1);
                     }
-                    if (av->pause)
-                    {
-                        int tmp_volume = av->volume;
-                        av->volume = 0;
-                        av->pause = !av->pause;
-                        if (av->audio_idx >= 0)
-                        {
-                            SDL_CondSignal(av->audio_queue.qCond);
-                            SDL_PauseAudio(av->pause);
-                        }
-                        SDL_Delay(150);
-                        av->pause = !av->pause;
-                        if (av->audio_idx >= 0)
-                        {
-                            SDL_CondSignal(av->audio_queue.qCond);
-                            SDL_PauseAudio(av->pause);
-                        }
-                        av->volume = tmp_volume;
-                    }
-                    av->seeking = 0;
+					SDL_AddTimer(300, SeekEnableTimerCallBack, av);
                 }
                 break;
             case SDLK_RIGHT://快进8秒
@@ -915,33 +1034,13 @@ int CreateVideo(VideoInf *av, void * wid = NULL)
                     av->seeking = 1;
                     while (av->seeking != 2)
                     {
-                        SDL_Delay(5);
+                        SDL_Delay(1);
                     }
-                    if (av->pause)
-                    {
-                        int tmp_volume = av->volume;
-                        av->volume = 0;
-                        av->pause = !av->pause;
-                        if (av->audio_idx >= 0)
-                        {
-                            SDL_CondSignal(av->audio_queue.qCond);
-                            SDL_PauseAudio(av->pause);
-                        }
-                        SDL_Delay(150);
-                        av->pause = !av->pause;
-                        if (av->audio_idx >= 0)
-                        {
-                            SDL_CondSignal(av->audio_queue.qCond);
-                            SDL_PauseAudio(av->pause);
-                        }
-                        av->volume = tmp_volume;
-                    }
-                    av->seeking = 0;
+					SDL_AddTimer(300, SeekEnableTimerCallBack, av);
                 }
                 break;
             case SDLK_SPACE://播放/暂停
                 av->pause = !av->pause;
-                SDL_PauseAudio(av->pause);
                 break;
             case SDLK_UP://提高音量
                 av->volume += 2;
@@ -1057,6 +1156,26 @@ void Player::Init()
         SDL_DestroyCond(av->picq_cond_write);
         av->picq_cond_write = NULL;
     }
+	if (av->picq_cond_read)
+	{
+		SDL_DestroyCond(av->picq_cond_read);
+		av->picq_cond_read = NULL;
+	}
+	if (av->abuf_mutex)
+	{
+		SDL_DestroyMutex(av->abuf_mutex);
+		av->abuf_mutex = NULL;
+	}
+	if (av->abuf_cond_write)
+	{
+		SDL_DestroyCond(av->abuf_cond_write);
+		av->abuf_cond_write = NULL;
+	}
+	if (av->abuf_cond_read)
+	{
+		SDL_DestroyCond(av->abuf_cond_read);
+		av->abuf_cond_read = NULL;
+	}
     if (av->refresh_mutex)
     {
         SDL_DestroyMutex(av->refresh_mutex);
@@ -1115,16 +1234,6 @@ void Player::Init()
         av_free(av->audio_buf);
         av->audio_buf = NULL;
     }
-//    if(av->picture_buf.frameYUV)
-//    {
-//        av_frame_free(&av->picture_buf.frameYUV);
-//        av->picture_buf.frameYUV = NULL;
-//    }
-//    if(av->picture_buf.buffer)
-//    {
-//        av_free(av->picture_buf.buffer);
-//        av->picture_buf.buffer = NULL;
-//    }
 
     //将av置0
     memset(av, 0, sizeof(VideoInf));
@@ -1189,11 +1298,6 @@ void Player::Pause()
 {
     if(!Playing()) return;
     av->pause = !av->pause;
-    if(av->audio_idx >= 0)
-    {
-        SDL_CondSignal(av->audio_queue.qCond);
-        SDL_PauseAudio(av->pause);
-    }
 }
 
 //获取视频的总长度，没有打开任何视频就返回-1
@@ -1213,7 +1317,7 @@ double Player::GetCurrentTime()
 //跳转播放，输入跳转到的时间点，单位是秒，返回是否跳转成功
 bool Player::Jump(double play_time)
 {
-    if(play_time < 0 || play_time > av->avFormatCtx->duration) return false;
+    if(play_time < 0 || play_time > av->avFormatCtx->duration / 1000000.0) return false;
     if(!Playing()) return false;
     if (!av->seeking)
     {
@@ -1221,18 +1325,9 @@ bool Player::Jump(double play_time)
         av->seeking = 1;
         while(av->seeking != 2)
         {
-            SDL_Delay(5);
+            SDL_Delay(1);
         }
-        if(av->pause)
-        {
-            int tmp_volume = av->volume;
-            av->volume = 0;
-            Pause();
-            SDL_Delay(150);
-            Pause();
-            av->volume = tmp_volume;
-        }
-        av->seeking = 0;
+		SDL_AddTimer(300, SeekEnableTimerCallBack, av);
     }
     return true;
 }
@@ -1248,18 +1343,9 @@ void Player::Backward()
         av->seeking = 1;
         while(av->seeking != 2)
         {
-            SDL_Delay(5);
+            SDL_Delay(1);
         }
-        if(av->pause)
-        {
-            int tmp_volume = av->volume;
-            av->volume = 0;
-            Pause();
-            SDL_Delay(150);
-            Pause();
-            av->volume = tmp_volume;
-        }
-        av->seeking = 0;
+		SDL_AddTimer(300, SeekEnableTimerCallBack, av);
     }
 }
 
@@ -1274,18 +1360,9 @@ void Player::Forward()
         av->seeking = 1;
         while(av->seeking != 2)
         {
-            SDL_Delay(5);
+            SDL_Delay(1);
         }
-        if(av->pause)
-        {
-            int tmp_volume = av->volume;
-            av->volume = 0;
-            Pause();
-            SDL_Delay(150);
-            Pause();
-            av->volume = tmp_volume;
-        }
-        av->seeking = 0;
+		SDL_AddTimer(300, SeekEnableTimerCallBack, av);
     }
 }
 

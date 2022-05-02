@@ -7,15 +7,19 @@
 #include <QUrl>
 #include <QIcon>
 #include <QStandardItem>
+#include <QSet>
+#include <QHash>
 
 struct Element {
 public:
-    Element(QImage cover_, QString name_) {
+    Element(QIcon cover_, QString name_, QString path_) {
         cover = cover_;
         name = name_;
+        path = path_;
     }
-    QImage cover;
+    QIcon cover;
     QString name;
+    QString path;
 };
 
 class PlayListModel : public QStandardItemModel
@@ -23,31 +27,24 @@ class PlayListModel : public QStandardItemModel
     Q_OBJECT
 
 public:
-
     explicit PlayListModel(QObject* parent = 0);
     ~PlayListModel();
-    enum PlayMode {
-        CurrentItemOnce, //只播放当前
-        Sequential, //顺序播放
-        Loop, //循环播放
-        Random //随机播放
-    };
 
 public:
-//    Element media(const QModelIndex &index) const;
-//    void setPlaybackMode(PlayMode mode);
-//    PlayMode playbackMode() const;
-//    QModelIndex currentIndex() const;
-//    void setPlayIndex(int index);
+    QString media(const QModelIndex &index);
+    QList<QString> totalMedia();   //返回播放列表中所有文件
+    bool haveMedia(QUrl path);   //播放列表是否包含该路径
+    int rowOfPath(QString path);    //路径的索引
 
 public:
-    void insert(QUrl url); //插入播放列表
+    void insert(const QUrl &path); //插入播放列表
+    void remove(QModelIndex &index);  //从播放列表中删除
+    void showMedia(QModelIndex &index); //查看音视频信息
 
 private:
     QList<Element> playList;
-    PlayMode playMode;
-    int m_index;
-
+    QSet<QUrl> playList_set;
+    QHash<QString, int> pathTorow;
 };
 
 #endif // PLAYLISTMODEL_H
