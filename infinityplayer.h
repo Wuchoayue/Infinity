@@ -17,6 +17,7 @@
 #include "playlistview.h"
 #include "playercontrols.h"
 #include "player.h"
+#include "myvideowidget.h"
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -59,8 +60,6 @@ public:
     void changeMediaDirShow();
     //播放
     void playMedia(QString path);
-    //保存播放列表
-    void on_savePlayList();
     //将秒数转换成时间格式
     QString secTotime(int second);
     void initPlay();    //播放前初始化
@@ -83,7 +82,7 @@ private:
     QSqlQueryModel mediaItem_sqlQueryModel;  //存放目录查询结果
     bool isMediaDirShow = false;    //当前是否打开了目录
     PlayerControls *playerControls;     //控制部分
-    QVideoWidget *video_videoWidget;    //播放器视频通道
+    MyVideoWidget *video_videoWidget;    //播放器视频通道
     Player *player;   //后端播放模块
     bool isPlay = false;    //是否在播放
     double mediaDuration = -1;   //音视频全长
@@ -98,6 +97,7 @@ private:
     int curPlayHistory = -1; //当前处于历史播放队列的位置
     int currentPlaySpeed = 1;   //当前播放速度
     int currentVolume = 50; //当前音量大小
+    void *curId;
 
 protected:
     void keyPressEvent(QKeyEvent *event);   //键盘事件

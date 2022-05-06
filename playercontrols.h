@@ -43,6 +43,7 @@ public:
     QToolButton *playStatus_button = nullptr; //控制播放状态
     QToolButton *preOne_button = nullptr; //控制上一首
     QToolButton *nextOne_button = nullptr;    //控制下一首
+    QSlider *volume_slider = nullptr;   //音量滑杆
 
 private:
     QToolButton *changeMediaDirShow_button = nullptr;   //改变目录显示状态
@@ -53,7 +54,6 @@ private:
     int currentPlayMode = 1;   //当前播放模式
     QPushButton *playSpeed_button = nullptr;    //播放速度控制
     int currentPlaySpeed = 1;   //当前播放倍速
-    QSlider *volume_slider = nullptr;   //音量滑杆
     QToolButton *volume_button = nullptr;   //音量按钮
     bool isMuted = false; //是否静音
     int volume_int = 50; //音量

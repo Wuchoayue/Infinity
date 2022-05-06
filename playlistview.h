@@ -8,6 +8,7 @@
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QSqlQuery>
+#include <QPushButton>
 #include "playlistmodel.h"
 
 class PlayListView : public QListView
@@ -24,20 +25,21 @@ public:
     explicit PlayListView(QWidget *parent = 0);
     ~PlayListView();
     void loadPlayList(QSqlQuery *infinityPlayer_sqlQuery);    //加载数据表
+    void savePlayList(QSqlQuery *infinityPlayer_sqlQuery);    //保存数据表
     void insert(const QUrl &path);
     void on_customContextMenuRequested(const QPoint &pos);
     void on_delMedia(); //删除音视频
     void on_addMedia(); //添加音视频
     void on_showMedia(); //查看音视频信息
-    QList<QString> totalMedia();   //返回播放列表中所有文件
     void preOne(QList<QString> &playHistory, int &curPlayHistorys);  //上一首
     void nextOne(); //下一首
     void changePlayMode(int value); //改变播放模式
     int playListNum();  //播放列表数目
+    void normalNextOne();   //自动播放下一首
+    int totalMedia();
 
 signals:
     void changeMedia(QString path);
-    void savePlayList();
     void preMedia(QString path);
     void noMedia();
     void haveMedia();

@@ -5,6 +5,7 @@ PlayListView::PlayListView(QWidget *parent) : QListView(parent)
     playList_model = new PlayListModel(this);
     setModel(playList_model);
     setContextMenuPolicy(Qt::CustomContextMenu);
+    setSelectionMode(QAbstractItemView::ExtendedSelection); //设置选中多行
     setEditTriggers(QAbstractItemView::NoEditTriggers); //设置不可编辑
     playList_menu = new QMenu(this);
     playMedia_action = new QAction(tr("播放"), playList_menu);
@@ -40,16 +41,30 @@ PlayListView::PlayListView(QWidget *parent) : QListView(parent)
 
 PlayListView::~PlayListView()
 {
-    emit savePlayList();
+
 }
 
 void PlayListView::loadPlayList(QSqlQuery *infinityPlayer_sqlQuery)
 {
+    //创建文件夹存放图标
+    QDir *dir = new QDir;
+    if(!dir->exists("../PlayListIcon")) {
+        dir->mkpath("../PlayListIcon");
+    }
     QString sql = "SELECT * FROM PlayList";
     if(infinityPlayer_sqlQuery->exec(sql)) {
         while(infinityPlayer_sqlQuery->next()) {
-            insert(infinityPlayer_sqlQuery->value(0).toString());
+            playList_model->insertAll(infinityPlayer_sqlQuery->value(0).toString(), infinityPlayer_sqlQuery->value(1).toString());
         }
+    }
+}
+
+void PlayListView::savePlayList(QSqlQuery *infinityPlayer_sqlQuery)
+{
+    infinityPlayer_sqlQuery->exec("DELETE FROM PlayList");
+    QList<Element> pathes = playList_model->totalMedia();
+    for(int i=0; i<pathes.size(); i++) {
+        infinityPlayer_sqlQuery->exec(QString("INSERT INTO PlayList VALUES('%1', '%2')").arg(pathes[i].path).arg(pathes[i].cover));
     }
 }
 
@@ -77,8 +92,8 @@ void PlayListView::on_customContextMenuRequested(const QPoint &pos)
 //删除音视频
 void PlayListView::on_delMedia()
 {
-    QModelIndex index = currentIndex();
-    playList_model->remove(index);
+    QList<QModelIndex> indexes = selectedIndexes();
+    playList_model->remove(indexes);
     if(playList_model->rowCount() == 0) emit noMedia();
 }
 
@@ -88,7 +103,7 @@ void PlayListView::on_addMedia()
     if(playList_model->rowCount() == 0) {
         emit haveMedia();
     }
-    QUrl path = QFileDialog::getOpenFileName(this,"open file",".","Audio (*.mp3 *.wav);;Video (*.mp4)");
+    QUrl path = QFileDialog::getOpenFileName(this,"open file",".","Audio (*.mp3 *.wav);;Video (*.mp4 *.avi *.flv)");
     if(!path.isEmpty()) {
         insert(path);
     }
@@ -99,11 +114,6 @@ void PlayListView::on_showMedia()
 {
     QModelIndex index = currentIndex();
     playList_model->showMedia(index);
-}
-
-QList<QString> PlayListView::totalMedia()
-{
-    return playList_model->totalMedia();
 }
 
 //上一首
@@ -161,6 +171,33 @@ void PlayListView::changePlayMode(int value)
 }
 
 int PlayListView::playListNum()
+{
+    return playList_model->rowCount();
+}
+
+void PlayListView::normalNextOne()
+{
+    QModelIndex index = currentIndex();
+    switch(currentPlayMode) {
+    case PlayMode::CurrentItemOnce:
+        break;
+    case PlayMode::Sequential:
+        setCurrentIndex(playList_model->index((index.row() + 1) % playList_model->rowCount(), 0));
+        currentPath = playList_model->media(currentIndex());
+        emit changeMedia(currentPath);
+        break;
+    case PlayMode::Loop:
+        emit changeMedia(currentPath);
+        break;
+    case PlayMode::Random:
+        setCurrentIndex(playList_model->index(rand() % playList_model->rowCount(), 0));
+        currentPath = playList_model->media(currentIndex());
+        emit changeMedia(currentPath);
+        break;
+    }
+}
+
+int PlayListView::totalMedia()
 {
     return playList_model->rowCount();
 }

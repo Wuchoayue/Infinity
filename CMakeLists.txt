@@ -27,6 +27,8 @@ set(PROJECT_SOURCES
     durationslider.h durationslider.cpp
     playlistmodel.h playlistmodel.cpp
     playlistview.h playlistview.cpp
+    mediainfo.h mediainfo.cpp
+    myvideowidget.h myvideowidget.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
