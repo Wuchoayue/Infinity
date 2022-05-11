@@ -14,6 +14,9 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QHash>
+#include <QMoveEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
 #include "playlistview.h"
 #include "playercontrols.h"
 #include "player.h"
@@ -97,11 +100,15 @@ private:
     int curPlayHistory = -1; //当前处于历史播放队列的位置
     int currentPlaySpeed = 1;   //当前播放速度
     int currentVolume = 50; //当前音量大小
-    void *curId;
+    QTimer *playerControls_timer; //控制模块的显示与隐藏
+    QPoint prePoint = QPoint(0, 0);
+    int noChange = 0;
 
 protected:
     void keyPressEvent(QKeyEvent *event);   //键盘事件
     void dragEnterEvent(QDragEnterEvent *event);    //拖动文件进入窗口触发
     void dropEvent(QDropEvent *event);  //释放文件触发
+    void moveEvent(QMoveEvent *event);
+//    void mouseMoveEvent(QMouseEvent *event);
 };
 #endif // INFINITYPLAYER_H

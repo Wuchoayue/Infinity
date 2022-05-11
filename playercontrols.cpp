@@ -143,13 +143,12 @@ PlayerControls::PlayerControls(QWidget *parent)
     fullScreen_button = new QToolButton(this);
     fullScreen_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarMinButton));
     connect(fullScreen_button, &QToolButton::clicked, this, [=] {
-        isFullScreen = !isFullScreen;
-        emit fullScreen_signal(isFullScreen);
+        emit fullScreen_signal();
     });
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->addStretch();
+//    layout->addStretch();
     layout->addWidget(changeMediaDirShow_button);
     layout->addSpacing(10);
     layout->addWidget(invert_button);
@@ -169,12 +168,8 @@ PlayerControls::PlayerControls(QWidget *parent)
     layout->addSpacing(30);
     layout->addWidget(volumeGraphy_button);
     layout->addWidget(fullScreen_button);
-    layout->addStretch();
+//    layout->addStretch();
     setLayout(layout);
 
 }
 
-void PlayerControls::setFullScreen(bool value)
-{
-    isFullScreen = value;
-}

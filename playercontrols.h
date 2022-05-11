@@ -24,7 +24,6 @@ class PlayerControls : public QWidget
 public:
     explicit PlayerControls(QWidget *parent = nullptr);
     void playStatus_clicked();
-    void setFullScreen(bool value);
 
 signals:
     void changeMediaDirShow_signal(); //改变目录显示状态
@@ -37,7 +36,7 @@ signals:
     void playSpeed_signal(int); //播放倍速
     void volume_signal(int);    //音量控制
     void volumeGraphy_signal(); //音频波形图
-    void fullScreen_signal(bool);    //改变屏幕大小
+    void fullScreen_signal();    //改变屏幕大小
 
 public:
     QToolButton *playStatus_button = nullptr; //控制播放状态
@@ -59,7 +58,6 @@ private:
     int volume_int = 50; //音量
     QToolButton *volumeGraphy_button = nullptr; //波形图
     QToolButton *fullScreen_button = nullptr;   //改变屏幕大小
-    bool isFullScreen = false;  //当前是否为全屏
 };
 
 #endif // PLAYERCONTROLS_H
