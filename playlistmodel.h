@@ -10,6 +10,7 @@
 #include <QSet>
 #include <QHash>
 #include <QFile>
+#include <QDir>
 #include "mediainfo.h"
 
 struct Element {
@@ -43,6 +44,7 @@ public:
     void remove(QList<QModelIndex> indexes);  //从播放列表中删除
     void showMedia(QModelIndex &index); //查看音视频信息
     void insertAll(QUrl path, QString iconPath);   //加载时进行插入
+    void clear();   //清空播放列表
 
 private:
     QList<Element> playList;

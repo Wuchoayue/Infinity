@@ -3,8 +3,16 @@
 MyVideoWidget::MyVideoWidget(QWidget *parent)
     : QVideoWidget(parent)
 {
-    qDebug() << rect();
-    showMaximized();
+    setAutoFillBackground(true);
+    QPalette palette = this->palette();
+    palette.setBrush(QPalette::Window,
+    QBrush(QPixmap("E:/videoplayer/资料/初步交互设计文档/播放.png").scaled( // 缩放背景图.
+    QSize(635, 480),
+    Qt::IgnoreAspectRatio,
+    Qt::SmoothTransformation))); // 使用平滑的缩放方式
+    setPalette(palette); // 至此, 已给widget加上了背景图.
+    this->hide();
+
     playControls_widget = new QWidget(this);
     playControls_widget->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
     playControls_widget->setAttribute(Qt::WA_TranslucentBackground);
@@ -27,12 +35,11 @@ void MyVideoWidget::init()
     QPoint cur = mapToGlobal(QPoint(0, 0));
     playControls_widget->move(cur.x(), cur.y() + height() * 0.8);
     playControls_widget->show();
-    qDebug() << rect();
 }
 
 void MyVideoWidget::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "reszie";
+    qDebug() <<rect();
     QPoint cur = mapToGlobal(QPoint(0, 0));
     playControls_widget->move(cur.x(), cur.y() + height() * 0.8);
     playControls_widget->resize(width(), height() / 5);

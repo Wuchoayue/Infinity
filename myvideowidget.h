@@ -15,6 +15,7 @@
 class MyVideoWidget : public QVideoWidget
 {
     Q_OBJECT
+
 public:
     explicit MyVideoWidget(QWidget *parent = 0);
     ~MyVideoWidget();

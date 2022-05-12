@@ -37,12 +37,14 @@ public:
     int playListNum();  //播放列表数目
     void normalNextOne();   //自动播放下一首
     int totalMedia();
+    void clearMedia();  //清空播放列表
 
 signals:
-    void changeMedia(QString path);
-    void preMedia(QString path);
-    void noMedia();
-    void haveMedia();
+    void changeMedia(QString path); //改变播放对象
+    void preMedia(QString path);    //上一首
+    void noMedia(); //播放列表无音视频
+    void haveMedia();   //播放列表有音视频
+    void changePlayList();  //播放列表条目改变
 
 private:
     PlayListModel *playList_model;  //播放列表模型

@@ -78,6 +78,10 @@ void PlayListModel::remove(QList<QModelIndex> indexes)
         playList.removeAt(curIndex.row());
         removeRow(curIndex.row());
     }
+    pathTorow.clear();
+    for(int i=0; i<playList.size(); i++) {
+        pathTorow.insert(playList[i].path, i);
+    }
 }
 
 void PlayListModel::showMedia(QModelIndex &index)
@@ -93,5 +97,19 @@ void PlayListModel::insertAll(QUrl path, QString iconPath)
     playList.append(ele);
     QStandardItem *item = new QStandardItem(QIcon(iconPath), path.fileName());
     insertRow(rowCount(), item);
+}
+
+void PlayListModel::clear()
+{
+    removeRows(0, rowCount());
+    playList.clear();
+    playList_set.clear();
+    pathTorow.clear();
+    QDir dir("../PlayListIcon");
+    dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot); //设置过滤
+    QFileInfoList fileList = dir.entryInfoList(); // 获取所有的文件信息
+    foreach(QFileInfo file, fileList) {
+        file.dir().remove(file.fileName());
+    }
 }
 

@@ -148,28 +148,26 @@ PlayerControls::PlayerControls(QWidget *parent)
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
-//    layout->addStretch();
     layout->addWidget(changeMediaDirShow_button);
-    layout->addSpacing(10);
+    layout->addStretch();
     layout->addWidget(invert_button);
-    layout->addSpacing(10);
+    layout->addStretch();
     layout->addWidget(durationStep_bututon);
-    layout->addSpacing(10);
+    layout->addStretch();
     layout->addWidget(playMode_button);
-    layout->addSpacing(10);
+    layout->addStretch();
     layout->addWidget(preOne_button);
     layout->addWidget(playStatus_button);
     layout->addWidget(nextOne_button);
-    layout->addSpacing(10);
+    layout->addStretch();
     layout->addWidget(playSpeed_button);
-    layout->addSpacing(10);
+    layout->addStretch();
     layout->addWidget(volume_button);
     layout->addWidget(volume_slider);
-    layout->addSpacing(30);
+    layout->addStretch();
     layout->addWidget(volumeGraphy_button);
+    layout->addStretch();
     layout->addWidget(fullScreen_button);
-//    layout->addStretch();
     setLayout(layout);
-
 }
 

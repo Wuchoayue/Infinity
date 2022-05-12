@@ -22,13 +22,19 @@ PlayListView::PlayListView(QWidget *parent) : QListView(parent)
     //播放
     connect(playMedia_action, &QAction::triggered, this, [=] {
         QModelIndex index = currentIndex();
+        int old = playList_model->rowOfPath(currentPath);
+        playList_model->item(old)->setForeground(QBrush(QColor(0, 0, 0)));
         currentPath = playList_model->media(index);
+        playList_model->item(index.row())->setForeground(QBrush(QColor(255, 0, 0)));
         emit changeMedia(currentPath);
     });
     //双击播放
     connect(this, &PlayListView::doubleClicked, this, [=] {
         QModelIndex index = currentIndex();
+        int old = playList_model->rowOfPath(currentPath);
+        playList_model->item(old)->setForeground(QBrush(QColor(0, 0, 0)));
         currentPath = playList_model->media(index);
+        playList_model->item(index.row())->setForeground(QBrush(QColor(255, 0, 0)));
         emit changeMedia(currentPath);
     });
     //删除音视频
@@ -57,6 +63,7 @@ void PlayListView::loadPlayList(QSqlQuery *infinityPlayer_sqlQuery)
             playList_model->insertAll(infinityPlayer_sqlQuery->value(0).toString(), infinityPlayer_sqlQuery->value(1).toString());
         }
     }
+    emit changePlayList();
 }
 
 void PlayListView::savePlayList(QSqlQuery *infinityPlayer_sqlQuery)
@@ -72,6 +79,7 @@ void PlayListView::savePlayList(QSqlQuery *infinityPlayer_sqlQuery)
 void PlayListView::insert(const QUrl &path)
 {
     playList_model->insert(path);
+    emit changePlayList();
 }
 
 //右键产生菜单
@@ -94,6 +102,7 @@ void PlayListView::on_delMedia()
 {
     QList<QModelIndex> indexes = selectedIndexes();
     playList_model->remove(indexes);
+    emit changePlayList();
     if(playList_model->rowCount() == 0) emit noMedia();
 }
 
@@ -124,12 +133,14 @@ void PlayListView::preOne(QList<QString> &playHistory, int &curPlayHistory)
         //上一首就是播放列表的上一首
         if(currentPlayMode < 3) {
             QModelIndex index = currentIndex();
+            playList_model->item(index.row())->setForeground(QBrush(QColor(0, 0, 0)));
             if(index.row() > 0) {
                 setCurrentIndex(playList_model->index(index.row()-1, 0));
             }
             else {
                 setCurrentIndex(playList_model->index(playList_model->rowCount()-1, 0));
             }
+            playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(255, 0, 0)));
         }
         //上一首是历史播放队列的上一首
         else {
@@ -138,7 +149,9 @@ void PlayListView::preOne(QList<QString> &playHistory, int &curPlayHistory)
                 curPlayHistory--;
             }
             if(curPlayHistory >= 0) {
+                playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(0, 0, 0)));
                 setCurrentIndex(playList_model->index(playList_model->rowOfPath(playHistory[curPlayHistory]), 0));
+                playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(255, 0, 0)));
             }
         }
         currentPath = playList_model->media(currentIndex());
@@ -154,11 +167,15 @@ void PlayListView::nextOne()
         //下一就是播放列表的下一首
         if(currentPlayMode < 3) {
             QModelIndex index = currentIndex();
+            playList_model->item(index.row())->setForeground(QBrush(QColor(0, 0, 0)));
             setCurrentIndex(playList_model->index((index.row() + 1) % playList_model->rowCount(), 0));
+            playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(255, 0, 0)));
         }
         //下一首随机
         else {
+            playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(0, 0, 0)));
             setCurrentIndex(playList_model->index(rand() % playList_model->rowCount(), 0));
+            playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(255, 0, 0)));
         }
         currentPath = playList_model->media(currentIndex());
         emit changeMedia(currentPath);
@@ -182,7 +199,9 @@ void PlayListView::normalNextOne()
     case PlayMode::CurrentItemOnce:
         break;
     case PlayMode::Sequential:
+        playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(0, 0, 0)));
         setCurrentIndex(playList_model->index((index.row() + 1) % playList_model->rowCount(), 0));
+        playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(255, 0, 0)));
         currentPath = playList_model->media(currentIndex());
         emit changeMedia(currentPath);
         break;
@@ -190,7 +209,9 @@ void PlayListView::normalNextOne()
         emit changeMedia(currentPath);
         break;
     case PlayMode::Random:
+        playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(0, 0, 0)));
         setCurrentIndex(playList_model->index(rand() % playList_model->rowCount(), 0));
+        playList_model->item(currentIndex().row())->setForeground(QBrush(QColor(255, 0, 0)));
         currentPath = playList_model->media(currentIndex());
         emit changeMedia(currentPath);
         break;
@@ -200,6 +221,12 @@ void PlayListView::normalNextOne()
 int PlayListView::totalMedia()
 {
     return playList_model->rowCount();
+}
+
+void PlayListView::clearMedia()
+{
+    playList_model->clear();
+    emit changePlayList();
 }
 
 

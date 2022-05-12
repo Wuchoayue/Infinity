@@ -1,51 +1,65 @@
 #ifndef MEDIADIR_H
 #define MEDIADIR_H
 
-#include <QMainWindow>
-#include <QListView>
-#include <QStringListModel>
+#include <QWidget>
+#include <QListWidget>
+#include <QToolButton>
 #include <QLabel>
-#include <QPushButton>
+#include <QTableView>
 #include <QLineEdit>
-#include <QStyle>
-#include <QSqlDatabase>
+#include <QHBoxLayout>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
-#include <QTableView>
 #include <QFileDialog>
-#include <QWidget>
+#include <QMenu>
 
 class MediaDir : public QWidget
 {
     Q_OBJECT
+public:
+    explicit MediaDir(QWidget *parent = 0);
+    ~MediaDir();
+    //添加目录按钮被点击
+    void on_addMediaDir_button_clicked();
+    //显示目录项
+    void showMediaItem(QListWidgetItem *item);
+    //添加目录
+    void addMediaDir(QSqlQuery *infinityPlayer_sqlQuery);
+    //删除目录
+    void delMediaDir(QSqlQuery *infinityPlayer_sqlQuery);
+    //右键菜单栏
+    void on_mediaDir_menu(const QPoint &pos);
+    //重命名
+    void renameMediaDir(QSqlQuery *infinityPlayer_sqlQuery);
+    //添加目录项
+    void addMediaItem(QSqlQuery *infinityPlayer_sqlQuery);
+    //删除目录项
+    void delMediaItem(QSqlQuery *infinityPlayer_sqlQuery);
+
+signals:
+    //新建目录编辑完成信号
+    void dirName_lineEdit_editingFinished();
+    //删除目录按钮点击信号
+    void delMediaDir_button_clicked();
+    //重命名编辑完成信号
+    void dirName_lineEdit_1_editingFinished();
+    //添加目录项按钮点击信号
+    void addMediaItem_button_clicked();
+    //删除目录项按钮点击信号
+    void delMediaItem_button_clicked();
 
 public:
-    MediaDir(QMainWindow *parent = nullptr);
-    ~MediaDir();
-//    void loadMediaDir();    //加载媒体库目录
-//    void on_addMediaDir_button_cliicked();
-//    void addMediaDir();
-//    void delMediaDir();
-//    void changeMediaDir(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-//    void showMediaItem(const QModelIndex &index);
-//    void on_addMediaItem_button_cliicked();
-//    void on_delMediaItem_button_cliicked();
-
-private:
-    QSqlDatabase infinityPlayer_dataBase;  //数据库
-    QSqlQuery *infinityPlayer_sqlQuery;     //数据库Sql
-    QListView mediaDir_listView;    //媒体库目录
-    QStringListModel *mediaDir_listModel; //媒体库目录内容
-    QLabel *mediaDir_label;
-    QPushButton *addMediaDir_button;    //添加目录按钮
-    QPushButton *delMediaDir_button;    //删除目录按钮
+    QListWidget *mediaDir_listWidget;    //媒体库目录
+    QLabel *mediaDir_label; //媒体库目录标签
+    QToolButton *addMediaDir_button;    //添加目录按钮
+    QToolButton *delMediaDir_button;    //删除目录按钮
     QLineEdit *dirName_lineEdit;    //添加目录
-    QTableView mediaItem_tableView; //目录项
-    QLabel *mediaItem_label;
-    QPushButton *addMediaItem_button;    //添加目录项按钮
-    QPushButton *delMediaItem_button;    //删除目录项按钮
-    QSqlQueryModel mediaItem_sqlQueryModel;  //存放目录查询结果
-
+    QLineEdit *dirName_lineEdit_1;  //修改目录
+    QTableView *mediaItem_tableView; //目录项
+    QSqlQueryModel *mediaItem_sqlQueryModel;    //目录项数据模型
+    QLabel *mediaItem_label;    //目录项标签
+    QToolButton *addMediaItem_button;    //添加目录项按钮
+    QToolButton *delMediaItem_button;    //删除目录项按钮
 };
 
 #endif // MEDIADIR_H
