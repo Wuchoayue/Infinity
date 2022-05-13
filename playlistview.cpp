@@ -43,6 +43,10 @@ PlayListView::PlayListView(QWidget *parent) : QListView(parent)
     connect(addMedia_action, &QAction::triggered, this, &PlayListView::on_addMedia);
     //查看音视频信息
     connect(showMedia_action, &QAction::triggered, this, &PlayListView::on_showMedia);
+    //播放列表数目改变
+    connect(playList_model, &PlayListModel::changePlayList, this, [=] {
+        emit changePlayList();
+    });
 }
 
 PlayListView::~PlayListView()
@@ -63,7 +67,6 @@ void PlayListView::loadPlayList(QSqlQuery *infinityPlayer_sqlQuery)
             playList_model->insertAll(infinityPlayer_sqlQuery->value(0).toString(), infinityPlayer_sqlQuery->value(1).toString());
         }
     }
-    emit changePlayList();
 }
 
 void PlayListView::savePlayList(QSqlQuery *infinityPlayer_sqlQuery)
@@ -79,7 +82,6 @@ void PlayListView::savePlayList(QSqlQuery *infinityPlayer_sqlQuery)
 void PlayListView::insert(const QUrl &path)
 {
     playList_model->insert(path);
-    emit changePlayList();
 }
 
 //右键产生菜单
@@ -102,7 +104,6 @@ void PlayListView::on_delMedia()
 {
     QList<QModelIndex> indexes = selectedIndexes();
     playList_model->remove(indexes);
-    emit changePlayList();
     if(playList_model->rowCount() == 0) emit noMedia();
 }
 
@@ -225,8 +226,16 @@ int PlayListView::totalMedia()
 
 void PlayListView::clearMedia()
 {
-    playList_model->clear();
-    emit changePlayList();
+    QMessageBox::StandardButton result = QMessageBox::question(NULL, "InfinityPlayer", "确定要清空播放列表吗?", QMessageBox::Yes | QMessageBox::No);
+    if(result == QMessageBox::Yes) {
+        playList_model->clear();
+        emit noMedia();
+    }
+}
+
+void PlayListView::noExist()
+{
+    playList_model->removeNoExist(currentIndex());
 }
 
 

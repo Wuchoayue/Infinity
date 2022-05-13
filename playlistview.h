@@ -9,6 +9,7 @@
 #include <QMimeData>
 #include <QSqlQuery>
 #include <QPushButton>
+#include <QMessageBox>
 #include "playlistmodel.h"
 
 class PlayListView : public QListView
@@ -38,6 +39,7 @@ public:
     void normalNextOne();   //自动播放下一首
     int totalMedia();
     void clearMedia();  //清空播放列表
+    void noExist();    //文件不存在后需要删除
 
 signals:
     void changeMedia(QString path); //改变播放对象

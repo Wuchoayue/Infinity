@@ -23,17 +23,27 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MediaDir_t {
-    const uint offsetsAndSize[2];
-    char stringdata0[9];
+    const uint offsetsAndSize[14];
+    char stringdata0[161];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(offsetof(qt_meta_stringdata_MediaDir_t, stringdata0) + ofs), len 
 static const qt_meta_stringdata_MediaDir_t qt_meta_stringdata_MediaDir = {
     {
-QT_MOC_LITERAL(0, 8) // "MediaDir"
+QT_MOC_LITERAL(0, 8), // "MediaDir"
+QT_MOC_LITERAL(9, 32), // "dirName_lineEdit_editingFinished"
+QT_MOC_LITERAL(42, 0), // ""
+QT_MOC_LITERAL(43, 26), // "delMediaDir_button_clicked"
+QT_MOC_LITERAL(70, 34), // "dirName_lineEdit_1_editingFin..."
+QT_MOC_LITERAL(105, 27), // "addMediaItem_button_clicked"
+QT_MOC_LITERAL(133, 27) // "delMediaItem_button_clicked"
 
     },
-    "MediaDir"
+    "MediaDir\0dirName_lineEdit_editingFinished\0"
+    "\0delMediaDir_button_clicked\0"
+    "dirName_lineEdit_1_editingFinished\0"
+    "addMediaItem_button_clicked\0"
+    "delMediaItem_button_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -43,21 +53,81 @@ static const uint qt_meta_data_MediaDir[] = {
       10,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       0,       // signalCount
+       5,       // signalCount
+
+ // signals: name, argc, parameters, tag, flags, initial metatype offsets
+       1,    0,   44,    2, 0x06,    1 /* Public */,
+       3,    0,   45,    2, 0x06,    2 /* Public */,
+       4,    0,   46,    2, 0x06,    3 /* Public */,
+       5,    0,   47,    2, 0x06,    4 /* Public */,
+       6,    0,   48,    2, 0x06,    5 /* Public */,
+
+ // signals: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
 
        0        // eod
 };
 
 void MediaDir::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    (void)_o;
-    (void)_id;
-    (void)_c;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        auto *_t = static_cast<MediaDir *>(_o);
+        (void)_t;
+        switch (_id) {
+        case 0: _t->dirName_lineEdit_editingFinished(); break;
+        case 1: _t->delMediaDir_button_clicked(); break;
+        case 2: _t->dirName_lineEdit_1_editingFinished(); break;
+        case 3: _t->addMediaItem_button_clicked(); break;
+        case 4: _t->delMediaItem_button_clicked(); break;
+        default: ;
+        }
+    } else if (_c == QMetaObject::IndexOfMethod) {
+        int *result = reinterpret_cast<int *>(_a[0]);
+        {
+            using _t = void (MediaDir::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MediaDir::dirName_lineEdit_editingFinished)) {
+                *result = 0;
+                return;
+            }
+        }
+        {
+            using _t = void (MediaDir::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MediaDir::delMediaDir_button_clicked)) {
+                *result = 1;
+                return;
+            }
+        }
+        {
+            using _t = void (MediaDir::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MediaDir::dirName_lineEdit_1_editingFinished)) {
+                *result = 2;
+                return;
+            }
+        }
+        {
+            using _t = void (MediaDir::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MediaDir::addMediaItem_button_clicked)) {
+                *result = 3;
+                return;
+            }
+        }
+        {
+            using _t = void (MediaDir::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MediaDir::delMediaItem_button_clicked)) {
+                *result = 4;
+                return;
+            }
+        }
+    }
     (void)_a;
 }
 
@@ -68,7 +138,7 @@ const QMetaObject MediaDir::staticMetaObject = { {
     qt_static_metacall,
     nullptr,
 qt_incomplete_metaTypeArray<qt_meta_stringdata_MediaDir_t
-, QtPrivate::TypeAndForceComplete<MediaDir, std::true_type>
+, QtPrivate::TypeAndForceComplete<MediaDir, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>
 
 
 
@@ -93,7 +163,48 @@ void *MediaDir::qt_metacast(const char *_clname)
 int MediaDir::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QWidget::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 5)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 5;
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 5)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 5;
+    }
     return _id;
+}
+
+// SIGNAL 0
+void MediaDir::dirName_lineEdit_editingFinished()
+{
+    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
+}
+
+// SIGNAL 1
+void MediaDir::delMediaDir_button_clicked()
+{
+    QMetaObject::activate(this, &staticMetaObject, 1, nullptr);
+}
+
+// SIGNAL 2
+void MediaDir::dirName_lineEdit_1_editingFinished()
+{
+    QMetaObject::activate(this, &staticMetaObject, 2, nullptr);
+}
+
+// SIGNAL 3
+void MediaDir::addMediaItem_button_clicked()
+{
+    QMetaObject::activate(this, &staticMetaObject, 3, nullptr);
+}
+
+// SIGNAL 4
+void MediaDir::delMediaItem_button_clicked()
+{
+    QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

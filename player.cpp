@@ -1,8 +1,8 @@
 ﻿#include <stdio.h>
 #include <math.h>
 #include <iostream>
-#include <QDebug>
 #include <stdlib.h>
+#include <cstring>
 #include "player.h"
 #include "sonic.h"
 using namespace std;
@@ -546,7 +546,7 @@ void VideoRefresh(void *user_data)
 			return;
 		}
 	}
-    SDL_UnlockMutex(av->picq_mutex);
+	SDL_UnlockMutex(av->picq_mutex);
 
 	VideoPicture *vp = &av->picture_queue[av->picq_ridx];
 
@@ -636,7 +636,7 @@ void JumpToPts(VideoInf *av, double pts)
 }
 
 //全屏/退出全屏
-void FullScreen(VideoInf *av)
+void MyFullScreen(VideoInf *av)
 {
     //还没有生成窗口，退出操作
     if (!av->texture)
@@ -645,15 +645,31 @@ void FullScreen(VideoInf *av)
     }
 
     SDL_LockMutex(av->screen_mutex);
+    SDL_DestroyTexture(av->texture);
+    SDL_DestroyRenderer(av->renderer);
+    SDL_DestroyWindow(av->screen);
     av->fullScreen = !av->fullScreen;
     if (av->fullScreen)
     {
+        //创建视频显示窗口
+        av->screen = SDL_CreateWindow("MyPlayer", 50, 50, 1280, 720, SDL_WINDOW_OPENGL);
+        SDL_ShowWindow(av->screen);
         SDL_SetWindowFullscreen(av->screen, SDL_WINDOW_FULLSCREEN_DESKTOP);
     }
     else
     {
+        if (av->wid)
+        {
+            av->screen = SDL_CreateWindowFrom(av->wid);
+        }
+        else
+        {
+            av->screen = SDL_CreateWindow("MyPlayer", 50, 50, 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+        }
         SDL_SetWindowFullscreen(av->screen, SDL_WINDOW_OPENGL);
     }
+    av->renderer = SDL_CreateRenderer(av->screen, -1, 0);
+    av->texture = SDL_CreateTexture(av->renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, av->width, av->height);
     SDL_UnlockMutex(av->screen_mutex);
 }
 
@@ -969,12 +985,12 @@ static Uint32 SeekEnableTimerCallBack(Uint32 interval, void *user_data)
 }
 
 //创建视频
-int CreateVideo(VideoInf *av, void * wid = NULL)
+int CreateVideo(VideoInf *av)
 {
     //创建视频显示窗口
-    if (wid)
+    if (av->wid)
     {
-        av->screen = SDL_CreateWindowFrom(wid);
+        av->screen = SDL_CreateWindowFrom(av->wid);
     }
     else
     {
@@ -983,7 +999,7 @@ int CreateVideo(VideoInf *av, void * wid = NULL)
     SDL_ShowWindow(av->screen);
     av->screen_mutex = SDL_CreateMutex();
 
-    if(wid) return 0;
+    if(av->wid) return 0;
 
     //等待消息到来
     SDL_Event event;
@@ -1057,12 +1073,12 @@ int CreateVideo(VideoInf *av, void * wid = NULL)
                 }
                 break;
             case SDLK_f://全屏
-                FullScreen(av);
+                MyFullScreen(av);
                 break;
             case SDLK_ESCAPE://关闭播放器
                 if (av->fullScreen)
                 {
-                    FullScreen(av);
+                    MyFullScreen(av);
                 }
                 else//关闭视频
                 {
@@ -1264,7 +1280,9 @@ void Player::Play(const char input_file[], void * wid)
 
     Init();//初始化类中参数
 
+    //保存传入的参数信息
     strcpy_s(av->file_name, input_file);
+    av->wid = wid;
 
     //初始化SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER))
@@ -1280,7 +1298,7 @@ void Player::Play(const char input_file[], void * wid)
     av->parse_tid = SDL_CreateThread(ParseThread, "ParseThread", av);
 
     //创建视频
-    CreateVideo(av, wid);
+    CreateVideo(av);
 
     //等待视频正常播放
     SDL_Delay(500);
@@ -1428,6 +1446,13 @@ void Player::VolumeDown()
     {
         av->volume = 0;
     }
+}
+
+//全屏
+void Player::FullScreen()
+{
+    if(!Playing()) return;
+    MyFullScreen(av);
 }
 
 //退出播放器，即关闭视频文件

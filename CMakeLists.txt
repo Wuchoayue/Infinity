@@ -28,9 +28,10 @@ set(PROJECT_SOURCES
     playlistmodel.h playlistmodel.cpp
     playlistview.h playlistview.cpp
     mediainfo.h mediainfo.cpp
-    myvideowidget.h myvideowidget.cpp
     playlist.h playlist.cpp
     mediadir.h mediadir.cpp
+    myfullscreen.h myfullscreen.cpp
+    thumbnail.cpp thumbnail.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

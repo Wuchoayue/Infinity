@@ -13,12 +13,9 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     : QWidget(parent)
 {
     // 初始化
-    this->resize(800, 480);
-    setMinimumWidth(800);
-    setMinimumHeight(480);
+    this->resize(680, 480);
     setAcceptDrops(true); //设置可以接收拖动事件
     grabKeyboard();
-    setMouseTracking(true);
 
     //添加播放器支持类型
     supportType.insert(".mp3");
@@ -34,13 +31,10 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     loadMediaDir();
 
     //播放控制部分
-    video_videoWidget = new MyVideoWidget(this);
-    playerControls = new PlayerControls(this);
-    duration_label = new QLabel(this);
-    duration_label->setText("00:00 / 00:00");
-    duration_slider = new DurationSlider(this);
-    duration_slider->setOrientation(Qt::Horizontal);
-    duration_slider->setMinimum(0);
+    video = new myfullscreen(this);
+    duration_slider = video->pc->duration_slider;
+    duration_label = video->pc->duration_label;
+    playerControls = video->pc;
 
     //播放列表部分
     playList = new PlayList(this);
@@ -52,26 +46,16 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     QHBoxLayout *layout_center = new QHBoxLayout;
     layout_center->setContentsMargins(0, 0, 0, 0);
     layout_center->addWidget(mediaDir, 1);
-    layout_center->addWidget(video_videoWidget, 4);
+    layout_center->addWidget(video, 4);
     layout_center->addWidget(playList, 1);
-    QHBoxLayout *layout_bottom = new QHBoxLayout;
-    layout_bottom->addWidget(duration_slider);
-    layout_bottom->addWidget(duration_label);
     setLayout(layout_center);
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addLayout(layout_bottom);
-    layout->addWidget(playerControls);
-    video_videoWidget->playControls_widget->setLayout(layout);
-    video_videoWidget->init();
 
     //后端部分
     player = new Player();
     duration_timer = new QTimer(this);
-    playerControls_timer = new QTimer(this);
-    playerControls_timer->setInterval(500);
     //播放初始化
     initPlay();
+    duration_timer->setInterval(100);
     connect(duration_timer, &QTimer::timeout, this, [=] {
         int cur = duration_slider->value() + currentPlaySpeed;
         duration_slider->setValue(cur);
@@ -82,22 +66,7 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
             qDebug() << 1;
         }
     });
-    connect(playerControls_timer, &QTimer::timeout, this, [=] {
-        QPoint now = QCursor::pos();
-        if(now != prePoint) {
-            video_videoWidget->playControls_widget->show();
-            video_videoWidget->playControls_widget->raise();
-            prePoint = now;
-            noChange = 0;
-        }
-        else {
-            noChange += 1;
-            if(noChange >= 10) {
-                video_videoWidget->playControls_widget->hide();
-            }
-        }
-    });
-    playerControls_timer->start();
+
     changeMediaDirShow();
 
     //信号与槽函数
@@ -152,7 +121,7 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
         }
         else {
             playerControls->playStatus_button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-            duration_timer->start(1000);
+            duration_timer->start();
         }
         isPlay = !isPlay;
         player->Pause();
@@ -171,45 +140,36 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     });
     //改变屏幕大小
     connect(playerControls, &PlayerControls::fullScreen_signal, this, [=] {
-        if(!video_videoWidget->isFullScreen()) {
-            if(first) {
-                video_videoWidget->setFullScreen(true);
-                video_videoWidget->setFullScreen(false);
-                video_videoWidget->setFullScreen(true);
-                video_videoWidget->playControls_widget->raise();
-                if(isPlay) first = false;
-            }
-            else {
-                video_videoWidget->setFullScreen(true);
-                video_videoWidget->playControls_widget->raise();
-            }
+        if(video->isFullScreen()) {
+            video->turnToNormal();
         }
         else {
-            video_videoWidget->setFullScreen(false);
+            video->turnToFullScreen();
         }
     });
     //改变进度
     connect(duration_slider, &DurationSlider::sliderMoved, this, [&](int value) {
         duration_timer->stop();
-        player->Jump(value);
+        player->Jump(value / 10);
     });
     connect(duration_slider, &DurationSlider::valueChanged, this, [&](int value) {
-        QString str = secTotime(value);
+        QString str = secTotime(value / 10);
         duration_label->setText(str + " / " + mediaDuration_str);
     });
     connect(duration_slider, &DurationSlider::sliderReleasedAt, this, [&](int value) {
-        if(isPlay) duration_timer->start(1000);
-        player->Jump(value);
+        if(isPlay) duration_timer->start();
+        player->Jump(value / 10);
     });
 
     //播放列表部分
     //改变播放的音视频
     connect(playList->playList_listView, &PlayListView::changeMedia, this, &InfinityPlayer::playMedia);
-    connect(playList->playList_listView, &PlayListView::preMedia,this, &InfinityPlayer::on_preMedia);
+    connect(playList->playList_listView, &PlayListView::preMedia, this, &InfinityPlayer::on_preMedia);
     //从媒体库添加至播放列表
     connect(mediaDir->mediaItem_tableView, &QTableView::doubleClicked, this, [&](const QModelIndex &index) {
-        QSqlQueryModel mediaItem_sqlQueryModel;
-        QString path = mediaItem_sqlQueryModel.index(index.row(), 1).data().toString();
+        qDebug() << index;
+        QString path = mediaDir->mediaItem_sqlQueryModel->index(index.row(), 1).data().toString();
+        qDebug() << path;
         playList->playList_listView->insert(path);
     });
     connect(playList->playList_listView, &PlayListView::noMedia, this, [=] {
@@ -252,6 +212,7 @@ void InfinityPlayer::loadMediaDir()
                                             "dirname TEXT UNIQUE NOT NULL)");
             if(infinityPlayer_sqlQuery->exec(creatTableSql)) {
                 qDebug() << "Create Table -- MediaDir Success";
+                infinityPlayer_sqlQuery->exec("INSERT INTO MediaDir VALUES('新建目录')");
             }
             else {
                 qDebug() << creatTableSql;
@@ -307,25 +268,25 @@ void InfinityPlayer::loadMediaDir()
 void InfinityPlayer::changeMediaDirShow()
 {
     mediaDir->mediaDir_listWidget->setCurrentRow(0);
+    if(isMediaDirShow) {
+        mediaDir->showMediaItem(mediaDir->mediaDir_listWidget->currentItem());
+    }
     mediaDir->mediaItem_label->setText(mediaDir->mediaDir_listWidget->currentItem()->text());
     mediaDir->setVisible(isMediaDirShow);
-    video_videoWidget->setVisible(!isMediaDirShow);
+    video->setVisible(!isMediaDirShow);
     playList->setVisible(!isMediaDirShow);
-    if(!isMediaDirShow) {
-        video_videoWidget->playControls_widget->show();
-        playerControls_timer->start();
-    }
-    else {
-        video_videoWidget->playControls_widget->hide();
-        playerControls_timer->stop();
-    }
     isMediaDirShow = !isMediaDirShow;
 }
 
 void InfinityPlayer::playMedia(QString path)
 {
-    initPlay();
     if(path != currentPath) {
+        if(!isFileExist(path)) {
+            QMessageBox::critical(NULL, "InfinityPlayer", "文件不存在", QMessageBox::Ok);
+            playList->playList_listView->noExist();
+            return;
+        }
+        initPlay();
         playHistory.append(path);
         curPlayHistory = playHistory.size() - 1;
         currentPath = path;
@@ -334,14 +295,17 @@ void InfinityPlayer::playMedia(QString path)
         player->SetSpeed(currentPlaySpeed);
         playerControls->playStatus_button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         player->SetVolume(currentVolume);
-        player->Play(path.toStdString().c_str(), (void*)video_videoWidget->winId());
-        mediaDuration = player->GetTotalDuration();
+        player->Play(path.toStdString().c_str(), (void*)video->vw->winId());
+        mediaDuration = player->GetTotalDuration() * 10;
         int cur = mediaDuration + 0.5;
-        QString str = secTotime(cur);
+        QString str = secTotime(cur / 10);
         mediaDuration_str = str;
         duration_slider->setMaximum(int(mediaDuration));
         duration_slider->setValue(0);
-        duration_timer->start(1000);
+        duration_timer->start();
+    }
+    else {
+        QMessageBox::critical(NULL, "InfinityPlayer", "不可重复播放", QMessageBox::Ok);
     }
 }
 
@@ -377,20 +341,30 @@ void InfinityPlayer::on_preMedia(QString path)
         player->SetSpeed(currentPlaySpeed);
         playerControls->playStatus_button->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         player->SetVolume(currentVolume);
-        player->Play(path.toStdString().c_str(), (void*)video_videoWidget->winId());
-        mediaDuration = player->GetTotalDuration();
+        player->Play(path.toStdString().c_str(), (void*)video->vw->winId());
+        mediaDuration = player->GetTotalDuration() * 10;
         int cur = mediaDuration + 0.5;
-        QString str = secTotime(cur);
+        QString str = secTotime(cur / 10);
         mediaDuration_str = str;
         duration_slider->setMaximum(int(mediaDuration));
         duration_slider->setValue(0);
-        duration_timer->start(1000);
+        duration_timer->start();
     }
 }
 
 void InfinityPlayer::nextMedia()
 {
     playList->playList_listView->normalNextOne();
+}
+
+bool InfinityPlayer::isFileExist(QString fileName)
+{
+    QFileInfo fileInfo(fileName);
+    if(fileInfo.isFile())
+    {
+        return true;
+    }
+    return false;
 }
 
 void InfinityPlayer::keyPressEvent(QKeyEvent *event)
@@ -426,21 +400,11 @@ void InfinityPlayer::keyPressEvent(QKeyEvent *event)
     }
     //改变屏幕大小
     else if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_F) {
-        if(video_videoWidget->isFullScreen()) {
-            video_videoWidget->setFullScreen(false);
+        if(video->isFullScreen()) {
+            video->turnToNormal();
         }
         else {
-            if(first) {
-                video_videoWidget->setFullScreen(true);
-                video_videoWidget->setFullScreen(false);
-                video_videoWidget->setFullScreen(true);
-                video_videoWidget->playControls_widget->raise();
-                first = false;
-            }
-            else {
-                video_videoWidget->setFullScreen(true);
-                video_videoWidget->playControls_widget->raise();
-            }
+            video->turnToFullScreen();
         }
     }
     //播放/暂停
@@ -471,6 +435,7 @@ void InfinityPlayer::dropEvent(QDropEvent *event)
         for(int i=0; i<pathes.size(); i++) {
             QString path = pathes[i].fileName();
             if(!supportType.contains(path.right(path.length() - path.indexOf(".")))) {
+                QMessageBox::critical(NULL, "InfinityPlayer", "不支持该格式文件", QMessageBox::Ok);
                 return;
             }
         }
@@ -480,12 +445,6 @@ void InfinityPlayer::dropEvent(QDropEvent *event)
     }
 }
 
-void InfinityPlayer::moveEvent(QMoveEvent *event)
-{
-    QPoint cur = mapToGlobal(QPoint(0, 0));
-    video_videoWidget->playControls_widget->move(cur.x(), cur.y() + video_videoWidget->height() * 0.8);
-    return QWidget::moveEvent(event);
-}
 
 
 

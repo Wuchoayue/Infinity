@@ -8,7 +8,6 @@
 #include <QTimer>
 #include <QMenu>
 #include "durationslider.h"
-
 QT_BEGIN_NAMESPACE
 class QToolButton;
 class QSlider;
@@ -24,6 +23,16 @@ class PlayerControls : public QWidget
 public:
     explicit PlayerControls(QWidget *parent = nullptr);
     void playStatus_clicked();
+    QLabel* duration_label = nullptr;
+    DurationSlider* duration_slider = nullptr;
+    //框架
+    QVBoxLayout *main_layout = nullptr; //主框架
+    QHBoxLayout *wave_layout=nullptr;//放波形图
+    QHBoxLayout *progressBar_layout = nullptr;  // 放进度条
+    QHBoxLayout *control_layout = nullptr;  //放按钮等控件
+    QHBoxLayout *left_layout = nullptr;
+    QHBoxLayout *center_layout = nullptr;
+    QHBoxLayout *right_layout = nullptr;
 
 signals:
     void changeMediaDirShow_signal(); //改变目录显示状态
@@ -37,12 +46,14 @@ signals:
     void volume_signal(int);    //音量控制
     void volumeGraphy_signal(); //音频波形图
     void fullScreen_signal();    //改变屏幕大小
+    void showList_signal(bool); //显示列表
 
 public:
     QToolButton *playStatus_button = nullptr; //控制播放状态
     QToolButton *preOne_button = nullptr; //控制上一首
     QToolButton *nextOne_button = nullptr;    //控制下一首
     QSlider *volume_slider = nullptr;   //音量滑杆
+    void setShowListVisable(bool);
 
 private:
     QToolButton *changeMediaDirShow_button = nullptr;   //改变目录显示状态
@@ -58,6 +69,8 @@ private:
     int volume_int = 50; //音量
     QToolButton *volumeGraphy_button = nullptr; //波形图
     QToolButton *fullScreen_button = nullptr;   //改变屏幕大小
+    QToolButton *showList_button = nullptr; //显示隐藏列表
+    bool isShowList = true;
 };
 
 #endif // PLAYERCONTROLS_H

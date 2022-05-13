@@ -24,12 +24,6 @@ void MediaInfo::getCover(QUrl path)
     QVideoSink* sink = new QVideoSink(player);
     player->setVideoSink(sink);
     player->play();
-    QVideoFrame targetframe(sink->videoFrame());
-    if(targetframe.map(QVideoFrame::ReadOnly)) {
-        QImage image = targetframe.toImage();
-        image.save("1.png");
-    }
-
     connect(sink, &QVideoSink::videoFrameChanged,this, [=](const QVideoFrame& frame){
         if(frame.isValid()) {
             if(!this->isStop){

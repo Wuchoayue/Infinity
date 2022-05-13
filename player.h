@@ -21,6 +21,7 @@ extern "C"
 #define MAX_AUDIO_BUF_SIZE 19200
 #define MAX_VIDEO_PACKET_SIZE (1024 * 1024)
 #define MAX_AUDIO_PACKET_SIZE (1024 * 64)
+#define MAX_WID_SIZE 100
 #define PICTURE_QUEUE_SIZE 2
 #define VIDEO_REFRESH_EVENT (SDL_USEREVENT)
 #define VIDEO_QUIT_EVENT (SDL_USEREVENT + 1)
@@ -57,6 +58,7 @@ struct VideoInf
     int quit;//关闭视频的标志
     int resized;//窗口尺寸改变的标志
     char file_name[1024];//视频文件名
+    void *wid;//视频窗口id
     AVFormatContext *avFormatCtx;//视频文件上下文
     int video_idx, audio_idx;//视音频流下标
     AVCodecContext *vCodecCtx, *aCodecCtx;//视音频解码器上下文
@@ -123,6 +125,7 @@ public:
     bool SetVolume(int volume);//设置音量，输入值范围[0, 100]，返回是否设置成功
     void VolumeUp();//提高音量，每次提升2音量
     void VolumeDown();//降低音量，每次降低2音量
+    void FullScreen();//全屏，每调用一次都会改变全屏状态（即在全屏-窗口之间转换）
     void Quit();//退出播放器，即关闭当前视频文件
 
 private:

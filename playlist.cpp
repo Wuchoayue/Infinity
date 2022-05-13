@@ -31,6 +31,7 @@ PlayList::PlayList(QWidget *parent)
     //信号与槽函数
     //播放列表数目改变
     connect(playList_listView, &PlayListView::changePlayList, this, [=] {
+        qDebug() << playList_listView->playListNum();
         num_label->setText(QString::number(playList_listView->playListNum()) + "个资源");
     });
     //清空播放列表

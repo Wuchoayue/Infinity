@@ -11,6 +11,7 @@
 #include <QHash>
 #include <QFile>
 #include <QDir>
+#include <QMessageBox>
 #include "mediainfo.h"
 
 struct Element {
@@ -45,6 +46,10 @@ public:
     void showMedia(QModelIndex &index); //查看音视频信息
     void insertAll(QUrl path, QString iconPath);   //加载时进行插入
     void clear();   //清空播放列表
+    void removeNoExist(QModelIndex index); //删除不存在的音视频
+
+signals:
+    void changePlayList();
 
 private:
     QList<Element> playList;

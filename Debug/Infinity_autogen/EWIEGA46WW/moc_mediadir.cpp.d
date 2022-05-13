@@ -1,5 +1,4 @@
 E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:/CourseProject/Infinity/mediadir.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QStringListModel \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qabstractitemmodel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qalgorithms.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qanystringview.h \
@@ -72,7 +71,6 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qstringalgorithms.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qstringconverter.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qstringlist.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qstringlistmodel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qstringliteral.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qstringmatcher.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qstringtokenizer.h \
@@ -89,6 +87,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qvariant.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qvarlengtharray.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qversiontagging.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qaction.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qbitmap.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qbrush.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qcolor.h \
@@ -119,7 +118,6 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qvalidator.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qwindowdefs.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qwindowdefs_win.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlDatabase \
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlQuery \
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlQueryModel \
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/qsqldatabase.h \
@@ -128,13 +126,14 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/qtsql-config.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/qtsqlglobal.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QFileDialog \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QHBoxLayout \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QLabel \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QLineEdit \
-  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QListView \
-  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QMainWindow \
-  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QPushButton \
-  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QStyle \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QListWidget \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QMenu \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QMessageBox \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QTableView \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QToolButton \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QWidget \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractbutton.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -142,14 +141,19 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractscrollarea.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractslider.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractspinbox.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qboxlayout.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qdialog.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qfiledialog.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qframe.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qgridlayout.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlabel.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlayout.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlayoutitem.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlineedit.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlistview.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qmainwindow.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qpushbutton.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlistwidget.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qmenu.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qmessagebox.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qrubberband.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qsizepolicy.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qslider.h \
@@ -158,6 +162,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtabbar.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtableview.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtabwidget.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtoolbutton.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtwidgets-config.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtwidgetsglobal.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qwidget.h

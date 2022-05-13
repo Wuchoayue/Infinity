@@ -8,6 +8,14 @@
 PlayerControls::PlayerControls(QWidget *parent)
     : QWidget(parent)
 {
+
+    //进度条
+    duration_label = new QLabel(this);
+    duration_label->setText("00:00 / 00:00");
+    duration_slider = new DurationSlider(this);
+    duration_slider->setOrientation(Qt::Horizontal);
+    duration_slider->setMinimum(0);
+
     //改变目录显示状态
     changeMediaDirShow_button = new QToolButton(this);
     changeMediaDirShow_button->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
@@ -145,29 +153,68 @@ PlayerControls::PlayerControls(QWidget *parent)
     connect(fullScreen_button, &QToolButton::clicked, this, [=] {
         emit fullScreen_signal();
     });
+    //显示列表
+    showList_button = new QToolButton(this);
+    showList_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarMinButton));
+    connect(showList_button, &QToolButton::clicked, this, [=] {
+        isShowList = !isShowList;
+        emit showList_signal(isShowList);
+    });
+    //    框架
 
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(changeMediaDirShow_button);
-    layout->addStretch();
-    layout->addWidget(invert_button);
-    layout->addStretch();
-    layout->addWidget(durationStep_bututon);
-    layout->addStretch();
-    layout->addWidget(playMode_button);
-    layout->addStretch();
-    layout->addWidget(preOne_button);
-    layout->addWidget(playStatus_button);
-    layout->addWidget(nextOne_button);
-    layout->addStretch();
-    layout->addWidget(playSpeed_button);
-    layout->addStretch();
-    layout->addWidget(volume_button);
-    layout->addWidget(volume_slider);
-    layout->addStretch();
-    layout->addWidget(volumeGraphy_button);
-    layout->addStretch();
-    layout->addWidget(fullScreen_button);
-    setLayout(layout);
+    main_layout = new QVBoxLayout;//主框架
+    wave_layout = new QHBoxLayout;
+    progressBar_layout = new QHBoxLayout;  // 放进度条
+    control_layout = new QHBoxLayout;  //放按钮等控件
+    left_layout = new QHBoxLayout;
+    center_layout = new QHBoxLayout;
+    right_layout = new QHBoxLayout;
+    main_layout->setContentsMargins(0, 0, 0, 0);
+    wave_layout->setContentsMargins(0, 0, 0, 0);
+    progressBar_layout->setContentsMargins(0, 0, 0, 0);
+    control_layout->setContentsMargins(0, 0, 0, 0);
+    left_layout->setContentsMargins(0, 0, 0, 0);
+    center_layout->setContentsMargins(0, 0, 0, 0);
+    right_layout->setContentsMargins(0, 0, 0, 0);
+
+    //布局
+        main_layout->addLayout(wave_layout);
+        main_layout->addLayout(progressBar_layout);
+        main_layout->addLayout(control_layout);
+        control_layout->addLayout(left_layout);
+        control_layout->addStretch();
+        control_layout->addLayout(center_layout);
+        control_layout->addStretch();
+        control_layout->addLayout(right_layout);
+
+        //    左边部分
+        left_layout->addWidget(changeMediaDirShow_button);// 媒体目录
+        //    中间部分
+        center_layout->addStretch();
+        center_layout->addWidget(preOne_button, 1);//控制上一首
+        center_layout->addWidget(playStatus_button, 1);  //控制播放状态
+        center_layout->addWidget(nextOne_button, 1);  //控制下一首
+        center_layout->addWidget(volumeGraphy_button, 1);//显示波形图
+        center_layout->addWidget(playSpeed_button, 1);  //倍速播放
+        center_layout->addWidget(playMode_button, 1);  //播放顺序
+        center_layout->addWidget(durationStep_bututon, 1);  //快进快退帧数
+        center_layout->addWidget(invert_button, 1);  //倒序播放
+        center_layout->addWidget(volume_button, 1);   //声音控制
+        center_layout->addWidget(volume_slider, 1);   //声音控制
+        center_layout->addStretch();
+        //    右边部分
+        right_layout->addWidget(fullScreen_button, 1);   //全屏播放
+        right_layout->addWidget(showList_button, 1); //显示播放列表
+
+        progressBar_layout->addWidget(duration_slider);
+        progressBar_layout->addWidget(duration_label);
+
+        setLayout(main_layout);
+
 }
 
+
+void PlayerControls::setShowListVisable(bool value)
+{
+    isShowList=value;
+}

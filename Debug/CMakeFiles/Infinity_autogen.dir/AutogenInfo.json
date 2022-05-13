@@ -494,9 +494,33 @@
 	"HEADERS" : 
 	[
 		[
+			"E:/CourseProject/Infinity/durationslider.h",
+			"MU",
+			"EWIEGA46WW/moc_durationslider.cpp",
+			null
+		],
+		[
 			"E:/CourseProject/Infinity/infinityplayer.h",
 			"MU",
 			"EWIEGA46WW/moc_infinityplayer.cpp",
+			null
+		],
+		[
+			"E:/CourseProject/Infinity/mediadir.h",
+			"MU",
+			"EWIEGA46WW/moc_mediadir.cpp",
+			null
+		],
+		[
+			"E:/CourseProject/Infinity/mediainfo.h",
+			"MU",
+			"EWIEGA46WW/moc_mediainfo.cpp",
+			null
+		],
+		[
+			"E:/CourseProject/Infinity/myfullscreen.h",
+			"MU",
+			"EWIEGA46WW/moc_myfullscreen.cpp",
 			null
 		],
 		[
@@ -512,9 +536,33 @@
 			null
 		],
 		[
+			"E:/CourseProject/Infinity/playlist.h",
+			"MU",
+			"EWIEGA46WW/moc_playlist.cpp",
+			null
+		],
+		[
+			"E:/CourseProject/Infinity/playlistmodel.h",
+			"MU",
+			"EWIEGA46WW/moc_playlistmodel.cpp",
+			null
+		],
+		[
+			"E:/CourseProject/Infinity/playlistview.h",
+			"MU",
+			"EWIEGA46WW/moc_playlistview.cpp",
+			null
+		],
+		[
 			"E:/CourseProject/Infinity/sonic.h",
 			"MU",
 			"EWIEGA46WW/moc_sonic.cpp",
+			null
+		],
+		[
+			"E:/CourseProject/Infinity/thumbnail.h",
+			"MU",
+			"EWIEGA46WW/moc_thumbnail.cpp",
 			null
 		]
 	],
@@ -576,11 +624,19 @@
 	"SETTINGS_FILE" : "E:/CourseProject/Infinity/Debug/CMakeFiles/Infinity_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "E:/CourseProject/Infinity/durationslider.cpp", "MU", null ],
 		[ "E:/CourseProject/Infinity/infinityplayer.cpp", "MU", null ],
 		[ "E:/CourseProject/Infinity/main.cpp", "MU", null ],
+		[ "E:/CourseProject/Infinity/mediadir.cpp", "MU", null ],
+		[ "E:/CourseProject/Infinity/mediainfo.cpp", "MU", null ],
+		[ "E:/CourseProject/Infinity/myfullscreen.cpp", "MU", null ],
 		[ "E:/CourseProject/Infinity/player.cpp", "MU", null ],
 		[ "E:/CourseProject/Infinity/playercontrols.cpp", "MU", null ],
-		[ "E:/CourseProject/Infinity/sonic.cpp", "MU", null ]
+		[ "E:/CourseProject/Infinity/playlist.cpp", "MU", null ],
+		[ "E:/CourseProject/Infinity/playlistmodel.cpp", "MU", null ],
+		[ "E:/CourseProject/Infinity/playlistview.cpp", "MU", null ],
+		[ "E:/CourseProject/Infinity/sonic.cpp", "MU", null ],
+		[ "E:/CourseProject/Infinity/thumbnail.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

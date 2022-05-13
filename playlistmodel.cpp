@@ -34,7 +34,7 @@ void PlayListModel::insert(const QUrl &path)
 {
     //判断是否有重复
     if(playList_set.contains(path)) {
-        qDebug() << "不可重复添加!";
+        QMessageBox::critical(NULL, "InfinityPlayer", "文件\"" + path.fileName() + "\"已存在", QMessageBox::Ok);
     }
     else {
         playList_set.insert(path);
@@ -67,7 +67,6 @@ void PlayListModel::remove(QList<QModelIndex> indexes)
 {
     for(int i=0; i<indexes.size(); i++) {
         QModelIndex curIndex = indexes[i];
-        qDebug() << curIndex.row() << "  " << i;
         playList_set.remove(playList[curIndex.row()].path);
         pathTorow.remove(playList[curIndex.row()].path);
         QFile file("../PlayListIcon/" + playList[curIndex.row()].cover);
@@ -82,6 +81,7 @@ void PlayListModel::remove(QList<QModelIndex> indexes)
     for(int i=0; i<playList.size(); i++) {
         pathTorow.insert(playList[i].path, i);
     }
+    emit changePlayList();
 }
 
 void PlayListModel::showMedia(QModelIndex &index)
@@ -97,6 +97,7 @@ void PlayListModel::insertAll(QUrl path, QString iconPath)
     playList.append(ele);
     QStandardItem *item = new QStandardItem(QIcon(iconPath), path.fileName());
     insertRow(rowCount(), item);
+    emit changePlayList();
 }
 
 void PlayListModel::clear()
@@ -111,5 +112,17 @@ void PlayListModel::clear()
     foreach(QFileInfo file, fileList) {
         file.dir().remove(file.fileName());
     }
+    emit changePlayList();
+}
+
+void PlayListModel::removeNoExist(QModelIndex index)
+{
+    playList_set.remove(playList[index.row()].path);
+    pathTorow.remove(playList[index.row()].path);
+    QFile file("../PlayListIcon/" + playList[index.row()].cover);
+    file.remove();
+    playList.removeAt(index.row());
+    removeRow(index.row());
+    emit changePlayList();
 }
 

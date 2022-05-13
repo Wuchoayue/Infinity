@@ -12,6 +12,7 @@
 #include <QSqlQueryModel>
 #include <QFileDialog>
 #include <QMenu>
+#include <QMessageBox>
 
 class MediaDir : public QWidget
 {

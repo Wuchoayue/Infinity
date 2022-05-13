@@ -23,7 +23,7 @@ MediaDir::MediaDir(QWidget *parent)
     mediaItem_sqlQueryModel = new QSqlQueryModel(this);
 
     //媒体目录项
-    mediaItem_label = new QLabel("粤语歌曲", this);
+    mediaItem_label = new QLabel("新建目录", this);
     addMediaItem_button = new QToolButton(this);
     addMediaItem_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarShadeButton));
     delMediaItem_button = new QToolButton(this);
@@ -133,26 +133,29 @@ void MediaDir::addMediaDir(QSqlQuery *infinityPlayer_sqlQuery)
 void MediaDir::delMediaDir(QSqlQuery *infinityPlayer_sqlQuery)
 {
     if(mediaDir_listWidget->count() == 1) {
-        qDebug() << "至少有一个目录!";
+        QMessageBox::critical(NULL, "InfinityPlayer", "请至少保留一个目录", QMessageBox::Ok);
         return;
     }
     QListWidgetItem *item = mediaDir_listWidget->currentItem();
     QString dirname = item->data(0).toString();
     QString sql = QString("delete from MediaItem where dirname = '%1'").arg(dirname);
-    if(infinityPlayer_sqlQuery->exec(sql)) {
-        sql = QString("delete from MediaDir where dirname = '%1'").arg(dirname);
+    QMessageBox::StandardButton result = QMessageBox::question(NULL, "InfinityPlayer", "确定要删除目录\"" + dirname + "\"吗?", QMessageBox::Yes | QMessageBox::No);
+    if(result == QMessageBox::Yes) {
         if(infinityPlayer_sqlQuery->exec(sql)) {
-            mediaDir_listWidget->takeItem(mediaDir_listWidget->currentRow());
-            mediaDir_listWidget->setCurrentRow(0);
-            QListWidgetItem *item = mediaDir_listWidget->currentItem();
-            showMediaItem(item);
+            sql = QString("delete from MediaDir where dirname = '%1'").arg(dirname);
+            if(infinityPlayer_sqlQuery->exec(sql)) {
+                mediaDir_listWidget->takeItem(mediaDir_listWidget->currentRow());
+                mediaDir_listWidget->setCurrentRow(0);
+                QListWidgetItem *item = mediaDir_listWidget->currentItem();
+                showMediaItem(item);
+            }
+            else {
+                qDebug() << sql;
+            }
         }
         else {
             qDebug() << sql;
         }
-    }
-    else {
-        qDebug() << sql;
     }
 }
 
@@ -215,11 +218,11 @@ void MediaDir::addMediaItem(QSqlQuery *infinityPlayer_sqlQuery)
                 showMediaItem(item);
             }
             else {
-                qDebug() << "插入失败!";
+                QMessageBox::critical(NULL, "InfinityPlayer", "添加失败", QMessageBox::Ok);
             }
         }
         else {
-            qDebug() << "插入失败!";
+            QMessageBox::critical(NULL, "InfinityPlayer", "不可重复添加", QMessageBox::Ok);
         }
     }
 }
@@ -227,13 +230,21 @@ void MediaDir::addMediaItem(QSqlQuery *infinityPlayer_sqlQuery)
 void MediaDir::delMediaItem(QSqlQuery *infinityPlayer_sqlQuery)
 {
     QModelIndex index = mediaItem_tableView->currentIndex();
-    QString path = mediaItem_sqlQueryModel->index(index.row(), 1).data().toString();
-    QString dirname = mediaItem_label->text();
-    QString sql = QString("DELETE FROM MediaItem WHERE dirname = '%1' and path = '%2'").arg(dirname, path);
-    if(infinityPlayer_sqlQuery->exec(sql)) {
-        showMediaItem(mediaDir_listWidget->currentItem());
+    if(index.row() == -1) {
+        QMessageBox::warning(NULL, "InfinityPlayer", "请选择要删除的文件", QMessageBox::Ok);
+        return;
     }
-    else {
-        qDebug() << "删除失败!";
+    QString path = mediaItem_sqlQueryModel->index(index.row(), 1).data().toString();
+    QUrl p(path);
+    QString dirname = mediaItem_label->text();
+    QMessageBox::StandardButton result = QMessageBox::question(NULL, "InfinityPlayer", "确定要删除文件\"" + p.fileName() + "\"吗?", QMessageBox::Yes | QMessageBox::No);
+    if(result == QMessageBox::Yes) {
+        QString sql = QString("DELETE FROM MediaItem WHERE dirname = '%1' and path = '%2'").arg(dirname, path);
+        if(infinityPlayer_sqlQuery->exec(sql)) {
+            showMediaItem(mediaDir_listWidget->currentItem());
+        }
+        else {
+            qDebug() << "删除失败!";
+        }
     }
 }

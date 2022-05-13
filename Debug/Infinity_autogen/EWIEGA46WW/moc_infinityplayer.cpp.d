@@ -1,9 +1,16 @@
 E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.cpp: E:/CourseProject/Infinity/infinityplayer.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QDir \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QFile \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QHash \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QList \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QMimeData \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QObject \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QRect \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QSet \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QSize \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QSizeF \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QTimer \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QUrl \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qabstractitemmodel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qalgorithms.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qanystringview.h \
@@ -12,6 +19,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qarraydatapointer.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qatomic.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qbasicatomic.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qbasictimer.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qbindingstorage.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qbytearray.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qbytearrayalgorithms.h \
@@ -54,6 +62,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmetacontainer.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmetaobject.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmetatype.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmimedata.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qnamespace.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qnativeinterface.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qnumeric.h \
@@ -89,6 +98,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtaggedpointer.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtcore-config.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtextstream.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtimer.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtmetamacros.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtypeinfo.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qurl.h \
@@ -96,8 +106,18 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qvariant.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qvarlengtharray.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qversiontagging.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QDragEnterEvent \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QDropEvent \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QIcon \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QImage \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/QKeyEvent \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QMouseEvent \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QMoveEvent \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QResizeEvent \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QStandardItem \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QStandardItemModel \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/QTransform \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qaction.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qbitmap.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qbrush.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qcolor.h \
@@ -113,6 +133,8 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qkeysequence.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpaintdevice.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpalette.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpen.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpicture.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpixelformat.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpixmap.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpointingdevice.h \
@@ -121,6 +143,11 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qrgb.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qrgba64.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qscreen.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qstandarditemmodel.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtextcursor.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtextdocument.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtextformat.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtextoption.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtgui-config.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtguiglobal.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtransform.h \
@@ -129,12 +156,25 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qvectornd.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qwindowdefs.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qwindowdefs_win.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QAudioDevice \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QAudioOutput \
   D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QMediaPlayer \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QVideoFrame \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QVideoSink \
   D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qaudio.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qaudiodevice.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qaudioformat.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qaudiooutput.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qmediaenumdebug.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qmediaplayer.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qtmultimedia-config.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qtmultimediaglobal.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideoframe.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideoframeformat.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideosink.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimediaWidgets/QVideoWidget \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimediaWidgets/qtmultimediawidgetdefs.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtMultimediaWidgets/qvideowidget.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlDatabase \
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlQuery \
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlQueryModel \
@@ -145,11 +185,20 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/qtsqlglobal.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QBoxLayout \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QFileDialog \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QHBoxLayout \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QLabel \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QLineEdit \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QListView \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QListWidget \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QMenu \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QMessageBox \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QPushButton \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QSlider \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QStyle \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QTableView \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QToolButton \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QWidget \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractbutton.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractitemdelegate.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractitemview.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractscrollarea.h \
@@ -160,10 +209,15 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qfiledialog.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qframe.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qgridlayout.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlabel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlayout.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlayoutitem.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlineedit.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlistview.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlistwidget.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qmenu.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qmessagebox.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qpushbutton.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qrubberband.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qsizepolicy.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qslider.h \
@@ -172,9 +226,11 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtabbar.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtableview.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtabwidget.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtoolbutton.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtwidgets-config.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtwidgetsglobal.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qwidget.h \
+  E:/CourseProject/Infinity/durationslider.h \
   E:/CourseProject/Infinity/include/SDL2/SDL.h \
   E:/CourseProject/Infinity/include/SDL2/SDL_assert.h \
   E:/CourseProject/Infinity/include/SDL2/SDL_atomic.h \
@@ -263,5 +319,12 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_infinityplayer.c
   E:/CourseProject/Infinity/include/libswresample/version.h \
   E:/CourseProject/Infinity/include/libswscale/swscale.h \
   E:/CourseProject/Infinity/include/libswscale/version.h \
+  E:/CourseProject/Infinity/mediadir.h \
+  E:/CourseProject/Infinity/mediainfo.h \
+  E:/CourseProject/Infinity/myfullscreen.h \
   E:/CourseProject/Infinity/player.h \
-  E:/CourseProject/Infinity/playercontrols.h
+  E:/CourseProject/Infinity/playercontrols.h \
+  E:/CourseProject/Infinity/playlist.h \
+  E:/CourseProject/Infinity/playlistmodel.h \
+  E:/CourseProject/Infinity/playlistview.h \
+  E:/CourseProject/Infinity/thumbnail.h
