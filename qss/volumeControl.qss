@@ -1,0 +1,29 @@
+QWidget#volumeControl {
+    background-color: rgb(218, 218, 218);
+}
+
+QToolButton#volume {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 12px;
+    margin-left: 3px;
+}
+
+QSlider::handle:vertical {
+    height: 9px;
+    margin: -3px -3px -3px -3px;
+    border-radius: 4px;
+    background-color: rgba(143,188,143,1);
+}
+
+QSlider::groove:vertical {
+    width: 3px;
+    top: 3px;
+    bottom: 3px;
+    border: none;
+    border-radius: 1px;
+    background: rgba(60,179,113,1);
+}
+
+QSlider::sub-page:vertical {
+    background: rgba(143,188,143,1);
+}

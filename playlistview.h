@@ -40,6 +40,7 @@ public:
     int totalMedia();
     void clearMedia();  //清空播放列表
     void noExist();    //文件不存在后需要删除
+    bool existMedia(QString path);  //判断是否存在某个路径
 
 signals:
     void changeMedia(QString path); //改变播放对象
@@ -50,10 +51,6 @@ signals:
 
 private:
     PlayListModel *playList_model;  //播放列表模型
-    QMenu *playList_menu;    //选项菜单
-    QAction *showMedia_action;   //查看音视频信息
-    QAction *delMedia_action;   //删除选中的媒体
-    QAction *playMedia_action;  //播放选中的媒体
     QString currentPath = "";   //当前正在播放的音视频
     PlayMode currentPlayMode = PlayMode::Sequential;    //播放模式
 };

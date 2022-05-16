@@ -127,11 +127,13 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtSql/qtsqlglobal.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QFileDialog \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QHBoxLayout \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QHeaderView \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QLabel \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QLineEdit \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QListWidget \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QMenu \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QMessageBox \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QPushButton \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QTableView \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QToolButton \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QWidget \
@@ -146,6 +148,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qfiledialog.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qframe.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qgridlayout.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qheaderview.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlabel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlayout.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlayoutitem.h \
@@ -154,6 +157,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediadir.cpp: E:
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlistwidget.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qmenu.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qmessagebox.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qpushbutton.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qrubberband.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qsizepolicy.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qslider.h \

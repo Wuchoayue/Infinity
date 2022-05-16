@@ -3,87 +3,104 @@
 MediaDir::MediaDir(QWidget *parent)
     : QWidget(parent)
 {
+    setAttribute(Qt::WA_StyledBackground, true);
+    //加载qss样式文件
+    QFile file(":/qss/mediaDir.qss");
+    file.open(QFile::ReadOnly);
+    QTextStream filetext(&file);
+    QString stylesheet = filetext.readAll();
+    setStyleSheet(stylesheet);
+    file.close();
+
     //控件定义
     //媒体目录
     mediaDir_listWidget = new QListWidget(this);
-    mediaDir_listWidget->setGridSize(QSize(mediaDir_listWidget->width(), mediaDir_listWidget->height() * 0.8));
     mediaDir_listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     dirName_lineEdit = new QLineEdit(mediaDir_listWidget);
-    dirName_lineEdit->resize(mediaDir_listWidget->gridSize());
     dirName_lineEdit->setVisible(false);
-    dirName_lineEdit_1 = new QLineEdit(mediaDir_listWidget);
-    dirName_lineEdit_1->resize(mediaDir_listWidget->gridSize());
-    dirName_lineEdit_1->setVisible(false);
+    dirName_lineEdit->grabKeyboard();
+    dirName_lineEdit->releaseKeyboard();
     mediaItem_tableView = new QTableView(this);
-    mediaDir_label = new QLabel("音视频目录", this);
-    addMediaDir_button = new QToolButton(this);
-    addMediaDir_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarShadeButton));
-    delMediaDir_button = new QToolButton(this);
-    delMediaDir_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarUnshadeButton));
+    mediaItem_tableView->verticalHeader()->hide();
+    mediaItem_tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    mediaItem_tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    mediaItem_tableView->setFocusPolicy(Qt::NoFocus);
+    mediaDir_label = new QLabel("音视频库", this);
+    addMediaDir_button = new QPushButton(this);
+    addMediaDir_button->setObjectName("addMediaDir_button");
+    addMediaDir_button->setIcon(QIcon(":/icon/addMediaDir.svg"));
+    addMediaDir_button->resize(30, 30);
+    addMediaDir_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     mediaItem_sqlQueryModel = new QSqlQueryModel(this);
 
     //媒体目录项
     mediaItem_label = new QLabel("新建目录", this);
-    addMediaItem_button = new QToolButton(this);
-    addMediaItem_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarShadeButton));
-    delMediaItem_button = new QToolButton(this);
-    delMediaItem_button->setIcon(style()->standardIcon(QStyle::SP_TitleBarUnshadeButton));
+    mediaItem_label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    playAll_button = new QPushButton(this);
+    playAll_button->setIcon(QIcon(":/icon/playAll.svg"));
+    playAll_button->setText("播放全部");
+    playAll_button->resize(70, 70);
+    playAll_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    close_button = new QPushButton(this);
+    close_button->setIcon(QIcon(":/icon/close.svg"));
+    close_button->resize(30, 30);
+    close_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    close_button->setObjectName("close_button");
 
     //控件布局
-    QHBoxLayout *layout_topleft = new QHBoxLayout;
+    QHBoxLayout *layout_topleft = new QHBoxLayout();
     layout_topleft->setContentsMargins(0, 0, 0, 0);
     layout_topleft->addWidget(mediaDir_label);
     layout_topleft->addSpacing(10);
     layout_topleft->addWidget(addMediaDir_button);
-    layout_topleft->addWidget(delMediaDir_button);
 
-    QVBoxLayout *layout_left = new QVBoxLayout;
+    QVBoxLayout *layout_left = new QVBoxLayout();
     layout_left->setContentsMargins(0, 0, 0, 0);
     layout_left->addLayout(layout_topleft, 1);
-    layout_left->addWidget(mediaDir_listWidget, 6);
+    layout_left->addWidget(mediaDir_listWidget, 9);
 
-    QHBoxLayout *layout_tabletop = new QHBoxLayout;
+    left_widget = new QWidget(this);
+    left_widget->setLayout(layout_left);
+    left_widget->setObjectName("left_widget");
+
+    QHBoxLayout *layout_tabletop = new QHBoxLayout();
     layout_tabletop->setContentsMargins(0, 0, 0, 0);
+    layout_tabletop->addWidget(close_button);
     layout_tabletop->addWidget(mediaItem_label);
-    layout_tabletop->addSpacing(30);
-    layout_tabletop->addWidget(addMediaItem_button);
-    layout_tabletop->addWidget(delMediaItem_button);
+    layout_tabletop->addWidget(playAll_button);
 
-    QVBoxLayout *layout_table = new QVBoxLayout;
+    QVBoxLayout *layout_table = new QVBoxLayout();
     layout_table->setContentsMargins(0, 0, 0, 0);
     layout_table->addLayout(layout_tabletop, 1);
-    layout_table->addWidget(mediaItem_tableView, 6);
+    layout_table->addWidget(mediaItem_tableView, 9);
 
-    QHBoxLayout *layout = new QHBoxLayout;
+    QHBoxLayout *layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->addLayout(layout_left, 1);
+    layout->addWidget(left_widget, 1);
     layout->addLayout(layout_table, 4);
 
     setLayout(layout);
 
     //信号与槽函数
     //添加目录
-    connect(addMediaDir_button, &QToolButton::clicked, this, &MediaDir::on_addMediaDir_button_clicked);
-    connect(dirName_lineEdit, &QLineEdit::editingFinished, this, [=] {
-        emit dirName_lineEdit_editingFinished();
-    });
-    //删除目录
-    connect(delMediaDir_button, &QToolButton::clicked, this, [=] {
-        emit delMediaDir_button_clicked();
-    });
+    connect(addMediaDir_button, &QPushButton::clicked, this, &MediaDir::on_addMediaDir_button_clicked);
+    connect(dirName_lineEdit, &QLineEdit::editingFinished, this, &MediaDir::addMediaDir);
     //右键菜单栏
     connect(mediaDir_listWidget, &QListWidget::customContextMenuRequested, this, &MediaDir::on_mediaDir_menu);
-    //重命名
-    connect(dirName_lineEdit_1, &QLineEdit::editingFinished, this, [=] {
-        emit dirName_lineEdit_1_editingFinished();
+    //播放全部
+    connect(playAll_button, &QPushButton::clicked, this, [=] {
+        QList<QString> pathes;
+        for(int i=0; i<mediaItem_sqlQueryModel->rowCount(); i++) {
+            qDebug() << i << " " << mediaItem_sqlQueryModel->index(i, 1).data().toString();
+            pathes.append(mediaItem_sqlQueryModel->index(i, 1).data().toString());
+        }
+        emit on_playAll_button_clicked(pathes);
     });
-    //添加目录项
-    connect(addMediaItem_button, &QToolButton::clicked, this, [=] {
-        emit addMediaItem_button_clicked();
-    });
-    //删除目录项
-    connect(delMediaItem_button, &QToolButton::clicked, this, [=] {
-        emit delMediaItem_button_clicked();
+    //目录项右键菜单栏
+    connect(mediaItem_tableView, &QTableView::customContextMenuRequested, this, &MediaDir::on_mediaItem_menu);
+    //隐藏媒体库
+    connect(close_button, &QPushButton::clicked, this, [=] {
+        emit close_button_clicked();
     });
 }
 
@@ -94,43 +111,61 @@ MediaDir::~MediaDir()
 
 void MediaDir::on_addMediaDir_button_clicked()
 {
-
-    dirName_lineEdit->move(0, mediaDir_listWidget->count() * dirName_lineEdit->size().height());
+    addMediaDir_button->setEnabled(false);
+    dirName_lineEdit->move(0, 10);
     dirName_lineEdit->setText("新建目录");
     dirName_lineEdit->setVisible(true);
     dirName_lineEdit->grabKeyboard();
+    mediaDir_listWidget->insertItem(0, "新建目录");
 }
 
 void MediaDir::showMediaItem(QListWidgetItem *item)
 {
     QString dirname = item->data(0).toString();
     mediaItem_label->setText(dirname);
-    QString str = QString("SELECT name as Name, path as Path, type as Type FROM MediaItem WHERE dirname = '%1'").arg(dirname);
+    QString str = QString("SELECT name as 文件名, path as 路径, type as 类型 FROM MediaItem WHERE dirname = '%1'").arg(dirname);
     mediaItem_sqlQueryModel->setQuery(str);
     mediaItem_tableView->setModel(mediaItem_sqlQueryModel);
+    mediaItem_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    mediaItem_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+    mediaItem_tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
+    mediaItem_tableView->setColumnWidth(0, 100);
+    mediaItem_tableView->setColumnWidth(2, 50);
 }
 
-void MediaDir::addMediaDir(QSqlQuery *infinityPlayer_sqlQuery)
+void MediaDir::addMediaDir()
 {
     QString dirname = dirName_lineEdit->text();
+    if(dirname == "") {
+        QMessageBox::critical(NULL, "InfinityPlayer", "目录名不能为空", QMessageBox::Ok);
+        dirName_lineEdit->setVisible(false);
+        dirName_lineEdit->releaseKeyboard();
+        mediaDir_listWidget->takeItem(0);
+        addMediaDir_button->setEnabled(true);
+        return;
+    }
     dirName_lineEdit->setVisible(false);
     dirName_lineEdit->releaseKeyboard();
     if(infinityPlayer_sqlQuery->exec(QString("INSERT INTO MediaDir VALUES('%1')").arg(dirname))) {
-        mediaDir_listWidget->addItem(dirname);
+        QListWidgetItem *item = mediaDir_listWidget->item(0);
+        item->setText(dirname);
+        mediaDir_listWidget->setCurrentRow(0);
+        showMediaItem(mediaDir_listWidget->currentItem());
     }
     else {
         dirname += "_0";
         while(!infinityPlayer_sqlQuery->exec(QString("INSERT INTO MediaDir VALUES('%1')").arg(dirname))) {
             dirname += "_0";
         }
-        mediaDir_listWidget->addItem(dirname);
-        mediaDir_listWidget->setCurrentRow(mediaDir_listWidget->count() - 1);
-        QListWidgetItem *item = mediaDir_listWidget->currentItem();
-        showMediaItem(item);
+        QListWidgetItem *item = mediaDir_listWidget->item(0);
+        item->setText(dirname);
+        mediaDir_listWidget->setCurrentRow(0);
+        showMediaItem(mediaDir_listWidget->currentItem());
     }
+    addMediaDir_button->setEnabled(true);
 }
 
-void MediaDir::delMediaDir(QSqlQuery *infinityPlayer_sqlQuery)
+void MediaDir::delMediaDir()
 {
     if(mediaDir_listWidget->count() == 1) {
         QMessageBox::critical(NULL, "InfinityPlayer", "请至少保留一个目录", QMessageBox::Ok);
@@ -161,46 +196,54 @@ void MediaDir::delMediaDir(QSqlQuery *infinityPlayer_sqlQuery)
 
 void MediaDir::on_mediaDir_menu(const QPoint &pos)
 {
-    QMenu *menu = new QMenu(this);
-    QAction* change = new QAction(tr("重命名"), menu);
-    connect(change, &QAction::triggered, this, [=] {
-        QListWidgetItem *item = mediaDir_listWidget->itemAt(pos);
-        QModelIndex index = mediaDir_listWidget->indexAt(pos);
-        QString oldname = item->data(0).toString();
-        dirName_lineEdit_1->setText(oldname);
-        dirName_lineEdit_1->move(0, index.row() * dirName_lineEdit_1->size().height());
-        dirName_lineEdit_1->setVisible(true);
-        dirName_lineEdit_1->grabKeyboard();
+    std::shared_ptr<QMenu> menu = std::make_shared<QMenu>();
+    QAction *del = menu->addAction(tr("删除"));
+    QAction *rename = menu->addAction(tr("重命名"));
+    //删除目录
+    connect(del, &QAction::triggered, this, &MediaDir::delMediaDir);
+    //重命名目录
+    connect(rename, &QAction::triggered, this, [=] {
+        isRename = true;
+        preName = mediaDir_listWidget->currentItem()->text();
+        mediaDir_listWidget->currentItem()->setFlags(mediaDir_listWidget->currentItem()->flags() | Qt::ItemIsEditable);
+        mediaDir_listWidget->editItem(mediaDir_listWidget->currentItem());
+        connect(mediaDir_listWidget, &QListWidget::itemChanged, this, &MediaDir::renameMediaDir);
     });
-    if (mediaDir_listWidget->itemAt(pos)!=nullptr)
+    if (mediaDir_listWidget->itemAt(pos) != nullptr)
     {
-        menu->addAction(change);
-        menu->popup(mediaDir_listWidget->mapToGlobal(pos));
+        menu->exec(mediaDir_listWidget->mapToGlobal(pos));
     }
 }
 
-void MediaDir::renameMediaDir(QSqlQuery *infinityPlayer_sqlQuery)
+void MediaDir::renameMediaDir(QListWidgetItem *item)
 {
-    QListWidgetItem *item = mediaDir_listWidget->currentItem();
-    QString oldname = item->data(0).toString();
-    QString newname = dirName_lineEdit_1->text();
-    if(infinityPlayer_sqlQuery->exec(QString("UPDATE MediaDir SET dirname = '%1' WHERE dirname = '%2'").arg(newname, oldname))) {
-        if(infinityPlayer_sqlQuery->exec(QString("UPDATE MediaItem SET dirname = '%1' WHERE dirname = '%2'").arg(newname, oldname))) {
-            item->setData(0, newname);
-            dirName_lineEdit_1->setVisible(false);
-            mediaItem_label->setText(newname);
+    if(isRename) {
+        isRename = false;
+        if(item->text() == "") {
+            QMessageBox::critical(NULL, "InfinityPlayer", "目录名不能为空", QMessageBox::Ok);
+            item->setText(preName);
+            return;
+        }
+        if(preName == item->text()) return;
+        disconnect(mediaDir_listWidget, &QListWidget::itemChanged, this, &MediaDir::renameMediaDir);
+        QString newName = item->text();
+        if(infinityPlayer_sqlQuery->exec(QString("UPDATE MediaDir SET dirname = '%1' WHERE dirname = '%2'").arg(newName, preName))) {
+            if(infinityPlayer_sqlQuery->exec(QString("UPDATE MediaItem SET dirname = '%1' WHERE dirname = '%2'").arg(newName, preName))) {
+                mediaItem_label->setText(newName);
+            }
+            else {
+                QMessageBox::critical(NULL, "InfinityPlayer", "目录\"" + newName + "\"已存在", QMessageBox::Ok);
+                item->setText(preName);
+            }
         }
         else {
-            qDebug() << "修改失败!";
+            QMessageBox::critical(NULL, "InfinityPlayer", "目录\"" + newName + "\"已存在", QMessageBox::Ok);
+            item->setText(preName);
         }
     }
-    else {
-        qDebug() << "修改失败!";
-    }
-    dirName_lineEdit_1->releaseKeyboard();
 }
 
-void MediaDir::addMediaItem(QSqlQuery *infinityPlayer_sqlQuery)
+void MediaDir::addMediaItem()
 {
     QString path = QFileDialog::getOpenFileName(this,"open file",".","Audio (*.mp3 *.wav);;Video (*.mp4 *.avi *.flv)");
     if(path != "") {
@@ -227,13 +270,9 @@ void MediaDir::addMediaItem(QSqlQuery *infinityPlayer_sqlQuery)
     }
 }
 
-void MediaDir::delMediaItem(QSqlQuery *infinityPlayer_sqlQuery)
+void MediaDir::delMediaItem()
 {
     QModelIndex index = mediaItem_tableView->currentIndex();
-    if(index.row() == -1) {
-        QMessageBox::warning(NULL, "InfinityPlayer", "请选择要删除的文件", QMessageBox::Ok);
-        return;
-    }
     QString path = mediaItem_sqlQueryModel->index(index.row(), 1).data().toString();
     QUrl p(path);
     QString dirname = mediaItem_label->text();
@@ -247,4 +286,58 @@ void MediaDir::delMediaItem(QSqlQuery *infinityPlayer_sqlQuery)
             qDebug() << "删除失败!";
         }
     }
+}
+
+void MediaDir::on_mediaItem_menu(const QPoint &pos)
+{
+    std::shared_ptr<QMenu> menu = std::make_shared<QMenu>();
+    QAction *add = menu->addAction(tr("添加"));
+    QAction *del = menu->addAction(tr("删除"));
+    QAction *addToPlayList = menu->addAction(tr("添加至播放列表"));
+    //添加目录项
+    connect(add, &QAction::triggered, this, &MediaDir::addMediaItem);
+    //删除目录项
+    connect(del, &QAction::triggered, this, &MediaDir::delMediaItem);
+    //添加至播放列表
+    connect(addToPlayList, &QAction::triggered, this, [=] {
+        int row = mediaItem_tableView->currentIndex().row();
+        QString path = mediaItem_sqlQueryModel->index(row, 1).data().toString();
+        emit addToPlayList_triggered(path);
+    });
+    if (mediaItem_tableView->indexAt(pos).row() == -1)
+    {
+        del->setEnabled(false);
+        addToPlayList->setEnabled(false);
+    }
+    menu->exec(mediaItem_tableView->mapToGlobal(pos));
+}
+
+QSqlQuery *MediaDir::getInfinityPlayer_sqlQuery() const
+{
+    return infinityPlayer_sqlQuery;
+}
+
+QListWidget *MediaDir::getMediaDir_listWidget() const
+{
+    return mediaDir_listWidget;
+}
+
+QTableView *MediaDir::getMediaItem_tableView() const
+{
+    return mediaItem_tableView;
+}
+
+QSqlQueryModel *MediaDir::getMediaItem_sqlQueryModel() const
+{
+    return mediaItem_sqlQueryModel;
+}
+
+void MediaDir::setInfinityPlayer_sqlQuery(QSqlQuery *newInfinityPlayer_sqlQuery)
+{
+    infinityPlayer_sqlQuery = newInfinityPlayer_sqlQuery;
+}
+
+QLabel *MediaDir::getMediaItem_label() const
+{
+    return mediaItem_label;
 }

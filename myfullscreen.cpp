@@ -3,119 +3,103 @@
 myfullscreen::myfullscreen(QWidget *parent)
     : QWidget{parent}
 {
-    resize(530,480);
+    //加载qss样式文件
+    QFile file(":/qss/myFullScreen.qss");
+    file.open(QFile::ReadOnly);
+    QTextStream filetext(&file);
+    QString stylesheet = filetext.readAll();
+    setStyleSheet(stylesheet);
+    file.close();
+    resize(530, 480);
     vw = new QWidget(this);
+    vw->setObjectName("vw");
     pc = new PlayerControls(this);
     pc->setWindowFlags(Qt::WindowStaysOnTopHint);
-//    pc->setStyleSheet("QWidget{background-color:rgba(0,0,0,100%)}");
-//    pc->setWindowOpacity(0.7);
+
     vw->resize(size());
     setPosition();
+    setMouseTracking(true);
+    vw->setMouseTracking(true);
     pc->setVisible(isPcVisable);
-//    pc->raise();
     pc->show();
+
     tm = new QTimer();
     tm->setInterval(200);
-
+    tm->start();
     connect(tm, &QTimer::timeout, this, &myfullscreen::turnToInvisable);
+    vw->setUpdatesEnabled(false);
 }
 
-//初始化函数
-void myfullscreen::init(){
-    qDebug()<<size();
-}
 //设置位置
-void myfullscreen::setPosition(){
-    pc->setGeometry(0,height()-50,width(),50);
+void myfullscreen::setPosition() {
+    isPcVisable = true;
+    pc->setVisible(isPcVisable);
+    pc->setGeometry(0,height()-70,width(),70);
     vw->setGeometry(0,0,width(),height());
+    pc->getVolumeControl()->move(pc->getVolumeShow_button()->x() - 12, height() - 165);
 }
+
 //转为不可见
-void myfullscreen::turnToInvisable(){
-//        if(!pc->geometry().contains(this->mapFromGlobal(QCursor::pos()))){
-//            pcLifeTime--;
-//            setCursor(Qt::ArrowCursor);
-//        }
-//        else{
-//            isPcVisable=true;
-//            pc->setVisible(isPcVisable);
-//            pcLifeTime=10;
-//        }
-//        if(pcLifeTime==0){
-//            setCursor(QCursor(Qt::BlankCursor));
-//            isPcVisable=false;
-//            pc->setVisible(isPcVisable);
-//            pcLifeTime=10;
-//        }
-    if(pcLifeTime>0){
-        if(!pc->geometry().contains(this->mapFromGlobal(QCursor::pos()))){
-        pcLifeTime--;
+void myfullscreen::turnToInvisable() {
+    if(pcLifeTime>0) {
+        if(!pc->getVolumeControl()->isVisible() && !pc->geometry().contains(this->mapFromGlobal(QCursor::pos()))){
+            pcLifeTime--;
         }
         setCursor(Qt::ArrowCursor);
-        isPcVisable=true;
+        isPcVisable = true;
     }
     else{
         setCursor(QCursor(Qt::BlankCursor));
-        isPcVisable=false;
+        isPcVisable = false;
     }
     pc->setVisible(isPcVisable);
+    pc->getVolumeControl()->setVisible(pc->getVolumeControl()->isVisible() && isPcVisable);
 }
-//变为全屏
-void myfullscreen::turnToFullScreen(){
-//    mysize = size();
-//    resize(1, 1);
-//    showMaximized();
-//    setFullScreen(true);
 
-//    pc->setWindowFlags(Qt::Tool|Qt::FramelessWindowHint);
+PlayerControls *myfullscreen::getPc() const
+{
+    return pc;
+}
 
-    tm->start();
+QWidget *myfullscreen::getVw() const
+{
+    return vw;
+}
+
+void myfullscreen::turnToFullScreen() {
     pcLifeTime=10;
     setWindowFlags(Qt::Window);
     showFullScreen();
     setPosition();
-    isPcVisable=true;
+    isPcVisable = true;
     pc->setVisible(isPcVisable);
     vw->resize(size());
-    setMouseTracking(true);
-    vw->setMouseTracking(true);
+    //    setMouseTracking(true);
+    //    vw->setMouseTracking(true);
     pc->setMouseTracking(true);
+    pc->getChangeMediaDirShow_button()->setVisible(false);
+    pc->getShowList_button()->setVisible(false);
 }
 
-//退出全屏
-void myfullscreen::turnToNormal(){
-
-//    pc->setWindowFlags(Qt::SubWindow|Qt::WindowStaysOnTopHint);
-//    pc->setParent(this);
-//    setMouseTracking(false);
+void myfullscreen::turnToNormal() {
     pc->show();
-
-    tm->stop();
-//    isPcVisable=false;
-//    pc->setVisible(isPcVisable);
     setWindowFlags(Qt::SubWindow);
     showNormal();
-//    pc->raise();
     setPosition();
     vw->resize(size());
-//    isPcVisable=true;
-//    pc->setVisible(isPcVisable);
-//    setFullScreen(false);
-//    resize(mysize);
-    setMouseTracking(false);
-    vw->setMouseTracking(false);
-    pc->setMouseTracking(false);
     setCursor(Qt::ArrowCursor);
+    pc->getChangeMediaDirShow_button()->setVisible(true);
+    pc->getShowList_button()->setVisible(true);
 }
 
 void myfullscreen::resizeEvent(QResizeEvent* event) {
     this->QWidget::resizeEvent(event);
     this->setPosition();
-    qDebug()<<parentWidget()->y();
-    qDebug()<<this->height();
-    this->pc->duration_slider->thumbnail_y=parentWidget()->y()+height();
 }
+
 void myfullscreen::mouseMoveEvent(QMouseEvent *e)
 {
     this->QWidget::mouseMoveEvent(e);
-    pcLifeTime=10;
+    pcLifeTime = 10;
 }
+

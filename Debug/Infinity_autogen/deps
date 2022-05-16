@@ -110,10 +110,7 @@ Infinity_autogen/timestamp: \
 	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QDropEvent \
 	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QIcon \
 	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QImage \
-	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QKeyEvent \
 	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QMouseEvent \
-	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QMoveEvent \
-	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QResizeEvent \
 	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QStandardItem \
 	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QStandardItemModel \
 	D:/Qt/6.2.4/msvc2019_64/include/QtGui/QTransform \
@@ -159,8 +156,6 @@ Infinity_autogen/timestamp: \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QAudioDevice \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QAudioOutput \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QMediaPlayer \
-	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QVideoFrame \
-	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QVideoSink \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qaudio.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qaudiodevice.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qaudioformat.h \
@@ -169,13 +164,9 @@ Infinity_autogen/timestamp: \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qmediaplayer.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qtmultimedia-config.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qtmultimediaglobal.h \
-	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideoframe.h \
-	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideoframeformat.h \
-	D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideosink.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimediaWidgets/QVideoWidget \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimediaWidgets/qtmultimediawidgetdefs.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtMultimediaWidgets/qvideowidget.h \
-	D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlDatabase \
 	D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlQuery \
 	D:/Qt/6.2.4/msvc2019_64/include/QtSql/QSqlQueryModel \
 	D:/Qt/6.2.4/msvc2019_64/include/QtSql/qsqldatabase.h \
@@ -186,6 +177,7 @@ Infinity_autogen/timestamp: \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QBoxLayout \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QFileDialog \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QHBoxLayout \
+	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QHeaderView \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QLabel \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QLineEdit \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QListView \
@@ -196,6 +188,7 @@ Infinity_autogen/timestamp: \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QSlider \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QStyle \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QTableView \
+	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QTableWidget \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QToolButton \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QWidget \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractbutton.h \
@@ -209,6 +202,7 @@ Infinity_autogen/timestamp: \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qfiledialog.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qframe.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qgridlayout.h \
+	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qheaderview.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlabel.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlayout.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qlayoutitem.h \
@@ -225,6 +219,7 @@ Infinity_autogen/timestamp: \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qstyleoption.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtabbar.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtableview.h \
+	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtablewidget.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtabwidget.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtoolbutton.h \
 	D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtwidgets-config.h \
@@ -491,6 +486,7 @@ Infinity_autogen/timestamp: \
 	E:/CourseProject/Infinity/playlistmodel.h \
 	E:/CourseProject/Infinity/playlistview.cpp \
 	E:/CourseProject/Infinity/playlistview.h \
+	E:/CourseProject/Infinity/resources.qrc \
 	E:/CourseProject/Infinity/sonic.cpp \
 	E:/CourseProject/Infinity/sonic.h \
 	E:/CourseProject/Infinity/thumbnail.cpp \

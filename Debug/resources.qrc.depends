@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qss/mediaDir.qss</file>
+        <file>icon/addMediaDir.svg</file>
+        <file>icon/playAll.svg</file>
+        <file>qss/playList.qss</file>
+        <file>icon/clear.svg</file>
+        <file>icon/close.svg</file>
+        <file>qss/durationSlider.qss</file>
+        <file>qss/infinityPlayer.qss</file>
+        <file>qss/playerControls.qss</file>
+        <file>icon/changeMediaDirShow.png</file>
+        <file>icon/fullScreen2.png</file>
+        <file>icon/nextOne.png</file>
+        <file>icon/playMode1.png</file>
+        <file>icon/playMode2.png</file>
+        <file>icon/playMode3.png</file>
+        <file>icon/playMode4.png</file>
+        <file>icon/playStatus1.png</file>
+        <file>icon/playStatus2.png</file>
+        <file>icon/preOne.png</file>
+        <file>icon/showList.png</file>
+        <file>icon/volume1.png</file>
+        <file>icon/volume2.png</file>
+        <file>icon/volumeGraphy.png</file>
+        <file>qss/myFullScreen.qss</file>
+        <file>icon/fullScreen1.png</file>
+        <file>icon/default.svg</file>
+        <file>icon/pause.svg</file>
+        <file>icon/pause.png</file>
+        <file>qss/volumeControl.qss</file>
+        <file>icon/showList_visible.png</file>
+    </qresource>
+</RCC>

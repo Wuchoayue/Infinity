@@ -22,17 +22,22 @@ class PlayerControls : public QWidget
 
 public:
     explicit PlayerControls(QWidget *parent = nullptr);
-    void playStatus_clicked();
-    QLabel* duration_label = nullptr;
-    DurationSlider* duration_slider = nullptr;
     //框架
-    QVBoxLayout *main_layout = nullptr; //主框架
-    QHBoxLayout *wave_layout=nullptr;//放波形图
     QHBoxLayout *progressBar_layout = nullptr;  // 放进度条
-    QHBoxLayout *control_layout = nullptr;  //放按钮等控件
-    QHBoxLayout *left_layout = nullptr;
-    QHBoxLayout *center_layout = nullptr;
-    QHBoxLayout *right_layout = nullptr;
+
+public:
+    QToolButton *getChangeMediaDirShow_button() const;
+    QToolButton *getPlayStatus_button() const;
+    QToolButton *getPreOne_button() const;
+    QToolButton *getNextOne_button() const;
+    QToolButton *getVolume_button() const;
+    QToolButton *getFullScreen_button() const;
+    QToolButton *getShowList_button() const;
+    QLabel *getDuration_label() const;
+    DurationSlider *getDuration_slider() const;
+    QSlider *getVolume_slider() const;
+    QWidget *getVolumeControl() const;
+    QToolButton *getVolumeShow_button() const;
 
 signals:
     void changeMediaDirShow_signal(); //改变目录显示状态
@@ -42,35 +47,35 @@ signals:
     void preOne_signal();   //上一首
     void playStatus_signal();   //播放状态
     void nextOne_signal();  //下一首
-    void playSpeed_signal(int); //播放倍速
+    void playSpeed_signal(double); //播放倍速
     void volume_signal(int);    //音量控制
     void volumeGraphy_signal(); //音频波形图
     void fullScreen_signal();    //改变屏幕大小
-    void showList_signal(bool); //显示列表
-
-public:
-    QToolButton *playStatus_button = nullptr; //控制播放状态
-    QToolButton *preOne_button = nullptr; //控制上一首
-    QToolButton *nextOne_button = nullptr;    //控制下一首
-    QSlider *volume_slider = nullptr;   //音量滑杆
-    void setShowListVisable(bool);
+    void showList_signal(); //显示列表
 
 private:
     QToolButton *changeMediaDirShow_button = nullptr;   //改变目录显示状态
     QPushButton *invert_button = nullptr;   //倒放控制
-    QPushButton *durationStep_bututon = nullptr;    //进度改变幅度
-    int durationStep_value = 1; //进度改变幅度
+    QPushButton *durationStep_button = nullptr;    //进度改变幅度
+    int durationStep_value = 4; //进度改变幅度
     QToolButton *playMode_button = nullptr; //播放模式控制
     int currentPlayMode = 1;   //当前播放模式
     QPushButton *playSpeed_button = nullptr;    //播放速度控制
-    int currentPlaySpeed = 1;   //当前播放倍速
+    double currentPlaySpeed = 1;   //当前播放倍速
+    QToolButton *playStatus_button = nullptr; //控制播放状态
+    QToolButton *preOne_button = nullptr; //控制上一首
+    QToolButton *nextOne_button = nullptr;    //控制下一首
+    QToolButton *volumeShow_button = nullptr;   //音量控制显示
+    QWidget *volumeControl = nullptr;   //音量控制模块
     QToolButton *volume_button = nullptr;   //音量按钮
+    QSlider *volume_slider = nullptr;   //音量滑杆
     bool isMuted = false; //是否静音
     int volume_int = 50; //音量
     QToolButton *volumeGraphy_button = nullptr; //波形图
     QToolButton *fullScreen_button = nullptr;   //改变屏幕大小
     QToolButton *showList_button = nullptr; //显示隐藏列表
-    bool isShowList = true;
+    QLabel* duration_label = nullptr;
+    DurationSlider* duration_slider = nullptr;
 };
 
 #endif // PLAYERCONTROLS_H

@@ -2,7 +2,16 @@
 
 PlayListModel::PlayListModel(QObject *parent) : QStandardItemModel(parent)
 {
-
+    video_type.append(".mp4");
+    video_type.append(".avi");
+    video_type.append(".flv");
+    audio_type.append(".mp3");
+    audio_type.append(".wav");
+    nameTotype.insert(".mp4", "MP4");
+    nameTotype.insert(".avi", "AVI");
+    nameTotype.insert(".flv", "FLV");
+    nameTotype.insert(".mp3", "MP3");
+    nameTotype.insert(".wav", "WAV");
 }
 
 PlayListModel::~PlayListModel()
@@ -39,28 +48,21 @@ void PlayListModel::insert(const QUrl &path)
     else {
         playList_set.insert(path);
         pathTorow.insert(path.toString(), playList.size());
-        if(path.fileName().split(".")[1] == "mp4") {
-            MediaInfo *mediaInfo = new MediaInfo(this);
-            mediaInfo->getCover(path);
-            connect(mediaInfo, &MediaInfo::getImage, this, [=](QImage img) {
-                QString cover = QString("../playListIcon/%1_%2.png").arg(path.fileName().split(".")[0]).arg(rand());
-                img.save(cover);
-                Element ele(cover, path.fileName(), path.toString());
-                playList.append(ele);
-                QStandardItem *item = new QStandardItem(QIcon(cover), path.fileName());
-                insertRow(rowCount(), item);
-            });
-        }
-        else {
-            QString cover = QString("../playListIcon/%1_%2.png").arg(path.fileName().split(".")[0]).arg(rand());
-            QImage img("E:/CourseProject/test.png");
-            img.save(cover);
+        QString cover = QString("../playListIcon/%1_%2.png").arg(path.fileName().split(".")[0]).arg(rand());
+        if(DrawJPG(path.toString().toStdString().c_str(), cover.toStdString().c_str())) {
             Element ele(cover, path.fileName(), path.toString());
             playList.append(ele);
             QStandardItem *item = new QStandardItem(QIcon(cover), path.fileName());
             insertRow(rowCount(), item);
         }
+        else {
+            Element ele(":/icon/default.svg", path.fileName(), path.toString());
+            playList.append(ele);
+            QStandardItem *item = new QStandardItem(QIcon(":/icon/default.svg"), path.fileName());
+            insertRow(rowCount(), item);
+        }
     }
+    emit changePlayList();
 }
 
 void PlayListModel::remove(QList<QModelIndex> indexes)
@@ -86,7 +88,38 @@ void PlayListModel::remove(QList<QModelIndex> indexes)
 
 void PlayListModel::showMedia(QModelIndex &index)
 {
-    qDebug() << playList[index.row()].path;
+    MediaInfo *info = new MediaInfo();
+    QString path = playList[index.row()].path;
+    QString name = QUrl(path).fileName();
+    info->setWindowIcon(QIcon(playList[index.row()].cover));
+    info->setWindowTitle(name + " 详细信息");
+    if(video_type.contains(name.right(name.length() - name.indexOf(".")))) {
+        MediaInfo::VideoInfo videoInfo;
+        videoInfo.name = name;
+        videoInfo.type = nameTotype[name.right(name.length() - name.indexOf("."))];
+        videoInfo.path = path;
+        videoInfo.size = "20K";
+        videoInfo.duration = "30:00";
+        videoInfo.bit_rate = "bit_rate";
+        videoInfo.frame_rate = "frame_rate";
+        videoInfo.coding_format = "codeing_format";
+        videoInfo.resolving = "120*220";
+        info->setInfo(videoInfo);
+    }
+    else if (audio_type.contains(name.right(name.length() - name.indexOf(".")))){
+        MediaInfo::AudioInfo audioInfo;
+        audioInfo.name = name;
+        audioInfo.type = nameTotype[name.right(name.length() - name.indexOf("."))];
+        audioInfo.path = path;
+        audioInfo.size = "20K";
+        audioInfo.duration = "30:00";
+        audioInfo.bit_rate = "bit_rate";
+        audioInfo.coding_format = "codeing_format";
+        audioInfo.channels = "channels";
+        audioInfo.album = "album";
+        audioInfo.singer = "singer";
+        info->setInfo(audioInfo);
+    }
 }
 
 void PlayListModel::insertAll(QUrl path, QString iconPath)

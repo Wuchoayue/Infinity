@@ -80,7 +80,7 @@ static const uint qt_meta_data_PlayerControls[] = {
       10,    1,  100,    2, 0x06,   12 /* Public */,
       11,    0,  103,    2, 0x06,   14 /* Public */,
       12,    0,  104,    2, 0x06,   15 /* Public */,
-      13,    1,  105,    2, 0x06,   16 /* Public */,
+      13,    0,  105,    2, 0x06,   16 /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -90,11 +90,11 @@ static const uint qt_meta_data_PlayerControls[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void, QMetaType::Double,    2,
     QMetaType::Void, QMetaType::Int,    2,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,    2,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -112,11 +112,11 @@ void PlayerControls::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 4: _t->preOne_signal(); break;
         case 5: _t->playStatus_signal(); break;
         case 6: _t->nextOne_signal(); break;
-        case 7: _t->playSpeed_signal((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 7: _t->playSpeed_signal((*reinterpret_cast< std::add_pointer_t<double>>(_a[1]))); break;
         case 8: _t->volume_signal((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 9: _t->volumeGraphy_signal(); break;
         case 10: _t->fullScreen_signal(); break;
-        case 11: _t->showList_signal((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 11: _t->showList_signal(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -171,7 +171,7 @@ void PlayerControls::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
             }
         }
         {
-            using _t = void (PlayerControls::*)(int );
+            using _t = void (PlayerControls::*)(double );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PlayerControls::playSpeed_signal)) {
                 *result = 7;
                 return;
@@ -199,7 +199,7 @@ void PlayerControls::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
             }
         }
         {
-            using _t = void (PlayerControls::*)(bool );
+            using _t = void (PlayerControls::*)();
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PlayerControls::showList_signal)) {
                 *result = 11;
                 return;
@@ -215,7 +215,7 @@ const QMetaObject PlayerControls::staticMetaObject = { {
     qt_static_metacall,
     nullptr,
 qt_incomplete_metaTypeArray<qt_meta_stringdata_PlayerControls_t
-, QtPrivate::TypeAndForceComplete<PlayerControls, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<int, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<int, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<int, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<int, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<bool, std::false_type>
+, QtPrivate::TypeAndForceComplete<PlayerControls, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<int, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<int, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<double, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<int, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>
 
 
 
@@ -299,7 +299,7 @@ void PlayerControls::nextOne_signal()
 }
 
 // SIGNAL 7
-void PlayerControls::playSpeed_signal(int _t1)
+void PlayerControls::playSpeed_signal(double _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
     QMetaObject::activate(this, &staticMetaObject, 7, _a);
@@ -325,10 +325,9 @@ void PlayerControls::fullScreen_signal()
 }
 
 // SIGNAL 11
-void PlayerControls::showList_signal(bool _t1)
+void PlayerControls::showList_signal()
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
-    QMetaObject::activate(this, &staticMetaObject, 11, _a);
+    QMetaObject::activate(this, &staticMetaObject, 11, nullptr);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

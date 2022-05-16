@@ -2,42 +2,12 @@
 #define INFINITYPLAYER_H
 
 #include <QWidget>
-#include <QListView>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlQueryModel>
-#include <QTableView>
-#include <QFileDialog>
-#include <QStyle>
-#include <QListWidget>
-#include <string.h>
-#include <QKeyEvent>
-#include <QTimer>
-#include <QHash>
-#include <QMoveEvent>
-#include <QResizeEvent>
-#include <QMouseEvent>
 #include "playlistview.h"
 #include "playercontrols.h"
 #include "player.h"
 #include "playlist.h"
 #include "mediadir.h"
 #include "myfullscreen.h"
-
-QT_BEGIN_NAMESPACE
-class QLabel;
-class QMediaPlayer;
-class QModelIndex;
-class QPushButton;
-class QComboBox;
-class QSlider;
-class QStatusBar;
-class QVideoWidget;
-class QLineEdit;
-class QToolButton;
-class QLineEdit;
-class PlayListModel;
-QT_END_NAMESPACE
 
 class InfinityPlayer : public QWidget
 {
@@ -57,6 +27,7 @@ public:
     void on_preMedia(QString path);
     void nextMedia();   //播放下一个音视频
     bool isFileExist(QString fileName); //判断文件是否存在
+    PlayerControls *getPlayerControls() const;
 
 private:
     QSqlDatabase infinityPlayer_dataBase;  //数据库
@@ -77,8 +48,11 @@ private:
     QSet<QString> supportType; //支持的文件类型
     QList<QString> playHistory; //历史播放队列
     int curPlayHistory = -1; //当前处于历史播放队列的位置
-    int currentPlaySpeed = 1;   //当前播放速度
+    double currentPlaySpeed = 1;   //当前播放速度
     int currentVolume = 50; //当前音量大小
+    bool isShowList = true;
+    int currentDurationStep = 4;
+    double currentDuration = 0;
 
 protected:
     void keyPressEvent(QKeyEvent *event);   //键盘事件

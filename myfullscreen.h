@@ -11,7 +11,6 @@
 #include <QToolButton>
 #include <QListWidget>
 #include <QBoxLayout>
-#include "player.h"
 #include "windows.h"
 #include "playercontrols.h"
 #include "durationslider.h"
@@ -19,32 +18,36 @@
 class myfullscreen : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit myfullscreen(QWidget *parent = nullptr);
-    //初始化函数
-    void init();
-    //视频窗口
-    QWidget *vw = nullptr;
-    //控制栏
-    PlayerControls *pc =nullptr;
-    bool isPcVisable=true;
-    int pcLifeTime = 10;
     //变为全屏
     void turnToFullScreen();
     //退出全屏
     void turnToNormal();
-    QSize mysize;
-    void resizeEvent(QResizeEvent* event);
-    void mouseMoveEvent(QMouseEvent *e);
-
-protected:
-    QTimer* tm = nullptr;
     //设置位置
     void setPosition();
     //转为不可见
     void turnToInvisable();
-signals:
 
+public:
+    PlayerControls *getPc() const;
+    QWidget *getVw() const;
+
+signals:
+    void on_clicked();
+
+private:
+    QWidget *vw = nullptr;  //视频窗口
+    PlayerControls *pc = nullptr;   //控制模块
+    bool isPcVisable = true;    //是否显示控制模块
+    int pcLifeTime = 10;    //计数器
+    QSize mysize;
+    QTimer* tm = nullptr;   //控制模块定时器
+
+protected:
+    void resizeEvent(QResizeEvent* event);
+    void mouseMoveEvent(QMouseEvent *e);
 };
 
 #endif // MYFULLSCREEN_H

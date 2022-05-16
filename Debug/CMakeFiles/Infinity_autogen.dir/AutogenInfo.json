@@ -486,7 +486,8 @@
 		"D:/Qt/6.2.4/msvc2019_64/lib/cmake/Qt6MultimediaWidgets/Qt6MultimediaWidgetsTargets-debug.cmake",
 		"D:/Qt/6.2.4/msvc2019_64/lib/cmake/Qt6MultimediaWidgets/Qt6MultimediaWidgetsTargets-relwithdebinfo.cmake",
 		"D:/Qt/6.2.4/msvc2019_64/lib/cmake/Qt6MultimediaWidgets/Qt6MultimediaWidgetsAdditionalTargetInfo.cmake",
-		"D:/Qt/6.2.4/msvc2019_64/lib/cmake/Qt6MultimediaWidgets/Qt6MultimediaWidgetsVersionlessTargets.cmake"
+		"D:/Qt/6.2.4/msvc2019_64/lib/cmake/Qt6MultimediaWidgets/Qt6MultimediaWidgetsVersionlessTargets.cmake",
+		"E:/CourseProject/Infinity/resources.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "E:/CourseProject/Infinity",
 	"DEP_FILE" : "E:/CourseProject/Infinity/Debug/Infinity_autogen/deps",

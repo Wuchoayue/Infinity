@@ -17,6 +17,8 @@ link_directories("${PROJECT_SOURCE_DIR}/lib")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core Gui Multimedia MultimediaWidgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core Gui Sql Multimedia MultimediaWidgets)
 
+set(QRC_SOURCE_FILES resources.qrc)
+
 set(PROJECT_SOURCES
     main.cpp
     infinityplayer.cpp
@@ -27,17 +29,20 @@ set(PROJECT_SOURCES
     durationslider.h durationslider.cpp
     playlistmodel.h playlistmodel.cpp
     playlistview.h playlistview.cpp
-    mediainfo.h mediainfo.cpp
     playlist.h playlist.cpp
     mediadir.h mediadir.cpp
     myfullscreen.h myfullscreen.cpp
     thumbnail.cpp thumbnail.h
+    mediainfo.h mediainfo.cpp
 )
+
+qt6_add_resources(QRC_FILES ${QRC_SOURCE_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Infinity
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${QRC_FILES}
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Infinity APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

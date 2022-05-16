@@ -1,5 +1,5 @@
 E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediainfo.cpp: E:/CourseProject/Infinity/mediainfo.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QObject \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qabstractitemmodel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qalgorithms.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qanystringview.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qarraydata.h \
@@ -28,16 +28,17 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediainfo.cpp: E
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qhash.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qhashfunctions.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qiodevicebase.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qitemselectionmodel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qiterable.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qiterator.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qline.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qlist.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qlocale.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qlogging.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmap.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmargins.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmath.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmetacontainer.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmetaobject.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qmetatype.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qnamespace.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qnumeric.h \
@@ -50,6 +51,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediainfo.cpp: E
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qprocessordetection.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qrect.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qrefcount.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qregularexpression.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qscopedpointer.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qscopeguard.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qset.h \
@@ -73,15 +75,24 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediainfo.cpp: E
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtextstream.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtmetamacros.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qtypeinfo.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qurl.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qutf8stringview.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qvariant.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qvarlengtharray.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qversiontagging.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qbitmap.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qbrush.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qcolor.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qcursor.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qfont.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qfontinfo.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qfontmetrics.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qicon.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qimage.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qkeysequence.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpaintdevice.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpalette.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpixelformat.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpixmap.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpolygon.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qregion.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qrgb.h \
@@ -89,16 +100,28 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_mediainfo.cpp: E
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtgui-config.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtguiglobal.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qtransform.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qvalidator.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qwindowdefs.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qwindowdefs_win.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QMediaPlayer \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QVideoFrame \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/QVideoSink \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qaudio.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qmediaenumdebug.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qmediaplayer.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qtmultimedia-config.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qtmultimediaglobal.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideoframe.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideoframeformat.h \
-  D:/Qt/6.2.4/msvc2019_64/include/QtMultimedia/qvideosink.h
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QHeaderView \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QTableWidget \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/QWidget \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractitemdelegate.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractitemview.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractscrollarea.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractslider.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qabstractspinbox.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qframe.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qheaderview.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qrubberband.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qsizepolicy.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qslider.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qstyle.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qstyleoption.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtabbar.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtableview.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtablewidget.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtabwidget.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtwidgets-config.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtwidgetsglobal.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qwidget.h

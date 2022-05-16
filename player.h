@@ -52,7 +52,7 @@ struct VideoPicture
 };
 
 //记录打开的视频文件动态信息
-struct VideoInf
+struct VideoInfo
 {
     //视频文件的全局参数
     int quit;//关闭视频的标志
@@ -92,7 +92,6 @@ struct VideoInf
 
     //音频相关数据
     PacketQueue audio_queue;//音频压缩数据包队列
-    AVPacket aPacket;//正在解码的音频数据包
     Uint8 *audio_buf;//正在播放的音频数据缓存
     int audio_buf_idx, audio_buf_size;//已经送入播放器缓存的解码数据量和该帧总的数据量
 	SDL_mutex *abuf_mutex;//音频数据缓存的互斥锁
@@ -114,14 +113,14 @@ public:
     void Play(const char input_file[], void *wid = NULL);//播放视频，输入视频文件路径和窗口控件的winID
     int Pausing();//判断是否处于暂停状态，返回1表示暂停中，返回0表示播放中，返回-1表示没有打开任何视频
     void Pause();//暂停-播放切换功能
-    double GetTotalDuration();//获取视频的总长度，没有打开任何视频就返回-1
-    double GetCurrentTime();//获取当前播放进度，没有打开任何视频就返回-1
-    bool Jump(double play_time);//跳转播放，输入跳转到的时间点，单位是秒，返回是否跳转成功
-    void Backward();//快退，每次跳转8秒
-    void Forward();//快进，每次跳转8秒
-    bool SetSpeed(double speed);//设置播放速度，暂时限制[0.5, 3]，返回是否设置成功
-    void SpeedUp();//加快播放速度，每次速度提升0.1，范围[0.5, 2]
-    void SpeedDown();//降低播放速度，每次速度降低0.1，范围[0.5, 2]
+    double GetTotalDuration();//获取视频的总长度，没有打开任何视频就返回-1，单位/10ms
+    double MyGetCurrentTime();//获取当前播放进度，没有打开任何视频就返回-1, 单位/10ms
+    bool Jump(double play_time);//跳转播放，输入跳转到的时间点，单位是10ms，返回是否跳转成功
+    void Backward(double t);//快退，每次跳转t秒
+    void Forward(double t);//快进，每次跳转t秒
+    bool SetSpeed(double speed);//设置播放速度，暂时限制[0.5, 8]，返回是否设置成功
+    void SpeedUp();//加快播放速度，每次速度提升0.5，范围[0.5, 8]
+    void SpeedDown();//降低播放速度，每次速度降低0.5，范围[0.5, 8]
     bool SetVolume(int volume);//设置音量，输入值范围[0, 100]，返回是否设置成功
     void VolumeUp();//提高音量，每次提升2音量
     void VolumeDown();//降低音量，每次降低2音量
@@ -130,7 +129,11 @@ public:
 
 private:
     void Init();//初始化类
-    VideoInf *av;
+	VideoInfo *av;
 
 };
 
+//提取视频文件的封面信息(输出视频的第一帧的JPG格式)
+//输入视频路径file_path，存放封面的路径url
+//放回true表示提取封面成功，并保存于url中
+bool DrawJPG(const char file_path[], const char url[]);
