@@ -24,6 +24,11 @@ QString PlayListModel::media(const QModelIndex &index)
     return playList[index.row()].path;
 }
 
+QByteArray PlayListModel::mediaMd5(const QModelIndex &index)
+{
+    return playList[index.row()].md5;
+}
+
 QList<Element> PlayListModel::totalMedia()
 {
     return playList;
@@ -49,14 +54,20 @@ void PlayListModel::insert(const QUrl &path)
         playList_set.insert(path);
         pathTorow.insert(path.toString(), playList.size());
         QString cover = QString("../playListIcon/%1_%2.png").arg(path.fileName().split(".")[0]).arg(rand());
+        QFile f(path.toString());
+        f.open(QFile::ReadOnly);
+        QCryptographicHash md(QCryptographicHash::Md5);
+        md.addData(&f);
+        QByteArray md5 = md.result().toHex();
+        f.close();
         if(DrawJPG(path.toString().toStdString().c_str(), cover.toStdString().c_str())) {
-            Element ele(cover, path.fileName(), path.toString());
+            Element ele(cover, path.fileName(), path.toString(), md5);
             playList.append(ele);
             QStandardItem *item = new QStandardItem(QIcon(cover), path.fileName());
             insertRow(rowCount(), item);
         }
         else {
-            Element ele(":/icon/default.svg", path.fileName(), path.toString());
+            Element ele(":/icon/default.svg", path.fileName(), path.toString(), md5);
             playList.append(ele);
             QStandardItem *item = new QStandardItem(QIcon(":/icon/default.svg"), path.fileName());
             insertRow(rowCount(), item);
@@ -83,6 +94,26 @@ void PlayListModel::remove(QList<QModelIndex> indexes)
     for(int i=0; i<playList.size(); i++) {
         pathTorow.insert(playList[i].path, i);
     }
+    emit changePlayList();
+}
+
+void PlayListModel::removeOne(QModelIndex index)
+{
+    int row = index.row();
+    playList_set.remove(playList[row].path);
+    QHash<QString, int>::iterator iter = pathTorow.begin();
+    pathTorow.remove(playList[row].path);
+    while(iter != pathTorow.end()) {
+        if(iter.value() > row) {
+            iter.value() -= 1;
+        }
+        qDebug() << iter.key() << " " << iter.value();
+        ++iter;
+    }
+    QFile file("../PlayListIcon/" + playList[row].cover);
+    file.remove();
+    playList.removeAt(row);
+    removeRow(row);
     emit changePlayList();
 }
 
@@ -122,13 +153,13 @@ void PlayListModel::showMedia(QModelIndex &index)
     }
 }
 
-void PlayListModel::insertAll(QUrl path, QString iconPath)
+void PlayListModel::insertAll(QUrl path, QString cover, QByteArray md5)
 {
     playList_set.insert(path);
     pathTorow.insert(path.toString(), playList.size());
-    Element ele(iconPath, path.fileName(), path.toString());
+    Element ele(cover, path.fileName(), path.toString(), md5);
     playList.append(ele);
-    QStandardItem *item = new QStandardItem(QIcon(iconPath), path.fileName());
+    QStandardItem *item = new QStandardItem(QIcon(cover), path.fileName());
     insertRow(rowCount(), item);
     emit changePlayList();
 }
@@ -147,15 +178,3 @@ void PlayListModel::clear()
     }
     emit changePlayList();
 }
-
-void PlayListModel::removeNoExist(QModelIndex index)
-{
-    playList_set.remove(playList[index.row()].path);
-    pathTorow.remove(playList[index.row()].path);
-    QFile file("../PlayListIcon/" + playList[index.row()].cover);
-    file.remove();
-    playList.removeAt(index.row());
-    removeRow(index.row());
-    emit changePlayList();
-}
-
