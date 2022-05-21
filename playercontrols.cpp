@@ -32,16 +32,6 @@ PlayerControls::PlayerControls(QWidget *parent)
         emit changeMediaDirShow_signal();
     });
 
-    //倒放
-    invert_button = new QPushButton("倒", this);
-    invert_button->setObjectName("invert");
-    invert_button->setFlat(true);
-    invert_button->setFixedSize(21, 21);
-
-    connect(invert_button, &QPushButton::clicked, this, [=] {
-        emit invert_signal();
-    });
-
     //进度变化幅度
     durationStep_button = new QPushButton("+4", this);
     durationStep_button->setObjectName("durationStep");
@@ -224,7 +214,7 @@ PlayerControls::PlayerControls(QWidget *parent)
     QHBoxLayout *center_layout = new QHBoxLayout;
     QHBoxLayout *right_layout = new QHBoxLayout;
 
-    main_layout->setContentsMargins(0, 0, 0, 0);
+    main_layout->setContentsMargins(5, 0, 5, 5);
     wave_layout->setContentsMargins(0, 0, 0, 0);
     progressBar_layout->setContentsMargins(0, 0, 0, 0);
     control_layout->setContentsMargins(0, 0, 0, 0);
@@ -253,8 +243,6 @@ PlayerControls::PlayerControls(QWidget *parent)
     center_layout->addWidget(playMode_button, 1);  //播放顺序
     center_layout->addSpacing(10);
     center_layout->addWidget(durationStep_button, 1);  //快进快退帧数
-    center_layout->addSpacing(10);
-    center_layout->addWidget(invert_button, 1);  //倒序播放
     center_layout->addSpacing(10);
     center_layout->addWidget(preOne_button, 1);//控制上一首
     center_layout->addWidget(playStatus_button, 1);  //控制播放状态

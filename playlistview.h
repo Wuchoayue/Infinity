@@ -39,8 +39,10 @@ public:
     void normalNextOne();   //自动播放下一首
     int totalMedia();
     void clearMedia();  //清空播放列表
-    void noExist();    //文件不存在后需要删除
     bool existMedia(QString path);  //判断是否存在某个路径
+    bool canPlay(QModelIndex index); //判断是否可以播放
+    bool isFileExist(QString fileName); //判断文件是否存在
+    void removeOne(QModelIndex index);  //删除一个播放列表项
 
 signals:
     void changeMedia(QString path); //改变播放对象

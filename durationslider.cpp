@@ -13,6 +13,7 @@ DurationSlider::DurationSlider(QWidget *parent)
     file.close();
 
     m_value=0;
+    s_value=0;
     isMoving = false;
     mousePress = false;
     thumbnail = new Thumbnail();
@@ -24,6 +25,11 @@ DurationSlider::DurationSlider(QWidget *parent)
 DurationSlider::~DurationSlider()
 {
 
+}
+
+void DurationSlider::setIsVideo(bool newIsVideo)
+{
+    isVideo = newIsVideo;
 }
 
 void DurationSlider::mousePressEvent(QMouseEvent *event)
@@ -40,7 +46,8 @@ void DurationSlider::mousePressEvent(QMouseEvent *event)
         value = minimum();
     }
     m_value = value + 0.5;
-    setValue(m_value);
+    s_value = m_value;
+//    setValue(m_value);
 }
 
 void DurationSlider::mouseMoveEvent(QMouseEvent *event)
@@ -54,7 +61,7 @@ void DurationSlider::mouseMoveEvent(QMouseEvent *event)
     if(value < minimum()){
         value = minimum();
     }
-
+    s_value = value;
     thumbnail_x=event->globalX();
 
     if(parentWidget()->parentWidget()->isFullScreen()) {
@@ -77,7 +84,7 @@ void DurationSlider::mouseMoveEvent(QMouseEvent *event)
 
         thumbnail_y = parentWidget()->parentWidget()->parentWidget()->y() + parentWidget()->parentWidget()->height();
     }
-    thumbnail->setGeometry(thumbnail_x-100, thumbnail_y-190, 200, 150);
+    thumbnail->setGeometry(thumbnail_x-100, thumbnail_y-190, 200, 130);
     if(mousePress) {
         m_value = value + 0.5;
         isMoving = true;
@@ -87,6 +94,8 @@ void DurationSlider::mouseMoveEvent(QMouseEvent *event)
     else {
         tm->start();
     }
+//    qDebug()<<s_value;
+    emit s_valueSignal(s_value);
 }
 
 void DurationSlider::mouseReleaseEvent(QMouseEvent *event)
@@ -97,6 +106,7 @@ void DurationSlider::mouseReleaseEvent(QMouseEvent *event)
     thumbnail->setVisible(false);
     emit sliderReleasedAt(m_value);
 }
+
 
 void DurationSlider::enterEvent(QEnterEvent *event)
 {
@@ -114,6 +124,6 @@ void DurationSlider::leaveEvent(QEvent *event)
 
 void DurationSlider::showThumbnail()
 {
-    thumbnail->setVisible(true);
+    thumbnail->setVisible(isVideo);
     tm->stop();
 }

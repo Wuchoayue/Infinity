@@ -2,9 +2,6 @@
 #define INFINITYPLAYER_H
 
 #include <QWidget>
-#include "playlistview.h"
-#include "playercontrols.h"
-#include "player.h"
 #include "playlist.h"
 #include "mediadir.h"
 #include "myfullscreen.h"
@@ -26,7 +23,6 @@ public:
     void initPlay();    //播放前初始化
     void on_preMedia(QString path);
     void nextMedia();   //播放下一个音视频
-    bool isFileExist(QString fileName); //判断文件是否存在
     PlayerControls *getPlayerControls() const;
 
 private:
@@ -44,7 +40,6 @@ private:
     QTimer *duration_timer; //进度定时器
     QLabel *duration_label; //进度显示
     PlayList *playList = nullptr;   //播放列表
-    QString currentPath = "";    //当前播放的视频
     QSet<QString> supportType; //支持的文件类型
     QList<QString> playHistory; //历史播放队列
     int curPlayHistory = -1; //当前处于历史播放队列的位置

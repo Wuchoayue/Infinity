@@ -13,7 +13,6 @@
 #include <QBoxLayout>
 #include "windows.h"
 #include "playercontrols.h"
-#include "durationslider.h"
 
 class myfullscreen : public QWidget
 {
