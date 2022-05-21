@@ -18,13 +18,44 @@ extern "C"
 #include "SDL2/SDL.h"
 }
 
+#include <QString>
+
 #define MAX_AUDIO_BUF_SIZE 19200
 #define MAX_VIDEO_PACKET_SIZE (1024 * 1024)
 #define MAX_AUDIO_PACKET_SIZE (1024 * 64)
 #define MAX_WID_SIZE 100
 #define PICTURE_QUEUE_SIZE 2
+#define INIT_DTS_VALUE -1000000
 #define VIDEO_REFRESH_EVENT (SDL_USEREVENT)
 #define VIDEO_QUIT_EVENT (SDL_USEREVENT + 1)
+
+class Info {
+public:
+    QString name;   //文件名
+    QString type;   //文件类型
+    QString path;   //文件路径
+    QString size;   //文件大小
+    QString duration;   //时长
+};
+
+class VideoInfo : public Info {
+public:
+    QString v_bit_rate;   //视频码率
+    QString frame_rate; //帧率
+    QString resolving;  //分辨率
+    QString a_bit_rate;   //音频码率
+    QString sample_rate; //采样率
+    QString channels;   //声道数
+};
+
+class AudioInfo : public Info {
+public:
+    QString bit_rate;   //音频码率
+    QString sample_rate; //采样率
+    QString channels;   //声道数
+    QString album; //专辑信息
+    QString singer;  //演唱者信息
+};
 
 //压缩数据包队列结构体
 struct PacketList
@@ -52,7 +83,7 @@ struct VideoPicture
 };
 
 //记录打开的视频文件动态信息
-struct VideoInfo
+struct AVInfo
 {
     //视频文件的全局参数
     int quit;//关闭视频的标志
@@ -70,7 +101,10 @@ struct VideoInfo
     double speed;//播放速度
     int pause;//是否暂停
     int seeking;//跳转播放处理中的标志
+	int getFrameFlag;//获取进度条上某帧画面操作的标志
+	double getFramePts;//获取的帧画面位置，单位为秒
     double tar_pts;//跳转播放的目标时间戳
+	int64_t last_vdts, last_adts;//存储解析线程中最后一次拿到的视音频包的dts
     SDL_mutex *screen_mutex;//屏幕锁，用于改变屏幕大小等过程
     SDL_Window *screen;//视频播放窗口
     SDL_Renderer *renderer;//视频播放渲染器
@@ -96,6 +130,12 @@ struct VideoInfo
     int audio_buf_idx, audio_buf_size;//已经送入播放器缓存的解码数据量和该帧总的数据量
 	SDL_mutex *abuf_mutex;//音频数据缓存的互斥锁
 	SDL_cond *abuf_cond_read, *abuf_cond_write;//音频数据缓存的读写同步信号量
+	Uint8 *audio_buf_test;//波形图数据
+	int audio_buf_size_test;//波形图数据的长度
+	SDL_mutex *abuf_mutex_test;//访问abuf_test的互斥锁
+	SDL_cond *cond_test;//用于控制测试线程进行读取的信号量
+	SDL_cond *abuf_cond_read_test, *abuf_cond_write_test;//访问abuf_test的读写同步信号量
+	SDL_Thread *test_tid;//用于获取波形图数据的后台处理线程
     SwrContext *swrCtx;//音频重采样上下文
     double audio_pts;//当前解码音频帧的时间戳（播放完成时），经过时基换算
 };
@@ -113,9 +153,10 @@ public:
     void Play(const char input_file[], void *wid = NULL);//播放视频，输入视频文件路径和窗口控件的winID
     int Pausing();//判断是否处于暂停状态，返回1表示暂停中，返回0表示播放中，返回-1表示没有打开任何视频
     void Pause();//暂停-播放切换功能
-    double GetTotalDuration();//获取视频的总长度，没有打开任何视频就返回-1，单位/10ms
-    double MyGetCurrentTime();//获取当前播放进度，没有打开任何视频就返回-1, 单位/10ms
-    bool Jump(double play_time);//跳转播放，输入跳转到的时间点，单位是10ms，返回是否跳转成功
+    double GetTotalDuration();//获取视频的总长度，没有打开任何视频就返回-1，单位10ms
+    double MyGetCurrentTime();//获取当前播放进度，没有打开任何视频就返回-1, 单位10ms
+	bool GetFrameJpg(double pts);//获取指定时刻的帧画面，单位10ms
+    bool Jump(double play_time);//跳转播放，输入跳转到的时间点，单位10ms，返回是否跳转成功
     void Backward(double t);//快退，每次跳转t秒
     void Forward(double t);//快进，每次跳转t秒
     bool SetSpeed(double speed);//设置播放速度，暂时限制[0.5, 8]，返回是否设置成功
@@ -126,14 +167,20 @@ public:
     void VolumeDown();//降低音量，每次降低2音量
     void FullScreen();//全屏，每调用一次都会改变全屏状态（即在全屏-窗口之间转换）
     void Quit();//退出播放器，即关闭当前视频文件
+	int GetAudioBuf(Uint8 **audio_buf);//获取当前播放音频帧的数据，存入*audio_buf中，并返回buf的size，返回-1时表示获取失败
+    bool isVideo(); //判断是不是视频
 
 private:
     void Init();//初始化类
-	VideoInfo *av;
+	AVInfo *av;
 
 };
 
+//保存文件的视音频基本信息，存入vi和ai结构体中
 //提取视频文件的封面信息(输出视频的第一帧的JPG格式)
 //输入视频路径file_path，存放封面的路径url
 //放回true表示提取封面成功，并保存于url中
 bool DrawJPG(const char file_path[], const char url[]);
+
+//获取文件视音频流基本信息，返回获取成功与否
+bool GetInfo(const char file_path[], VideoInfo *vi, AudioInfo *ai);

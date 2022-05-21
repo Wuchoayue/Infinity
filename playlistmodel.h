@@ -28,6 +28,7 @@ public:
     QString name;   //文件名
     QString path;   //路径
     QByteArray md5; //文件加密值
+
 };
 
 class PlayListModel : public QStandardItemModel

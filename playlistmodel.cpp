@@ -5,6 +5,7 @@ PlayListModel::PlayListModel(QObject *parent) : QStandardItemModel(parent)
     video_type.append(".mp4");
     video_type.append(".avi");
     video_type.append(".flv");
+    video_type.append(".mov");
     audio_type.append(".mp3");
     audio_type.append(".wav");
     nameTotype.insert(".mp4", "MP4");
@@ -12,6 +13,7 @@ PlayListModel::PlayListModel(QObject *parent) : QStandardItemModel(parent)
     nameTotype.insert(".flv", "FLV");
     nameTotype.insert(".mp3", "MP3");
     nameTotype.insert(".wav", "WAV");
+    nameTotype.insert(".mov", "MOV");
 }
 
 PlayListModel::~PlayListModel()
@@ -60,6 +62,8 @@ void PlayListModel::insert(const QUrl &path)
         md.addData(&f);
         QByteArray md5 = md.result().toHex();
         f.close();
+        VideoInfo videoInfo;
+        AudioInfo audioInfo;
         if(DrawJPG(path.toString().toStdString().c_str(), cover.toStdString().c_str())) {
             Element ele(cover, path.fileName(), path.toString(), md5);
             playList.append(ele);
@@ -124,31 +128,16 @@ void PlayListModel::showMedia(QModelIndex &index)
     QString name = QUrl(path).fileName();
     info->setWindowIcon(QIcon(playList[index.row()].cover));
     info->setWindowTitle(name + " 详细信息");
+    VideoInfo videoInfo;
+    AudioInfo audioInfo;
+    GetInfo(path.toStdString().c_str(), &videoInfo, &audioInfo);
     if(video_type.contains(name.right(name.length() - name.indexOf(".")))) {
-        MediaInfo::VideoInfo videoInfo;
-        videoInfo.name = name;
-        videoInfo.type = nameTotype[name.right(name.length() - name.indexOf("."))];
-        videoInfo.path = path;
-        videoInfo.size = "20K";
-        videoInfo.duration = "30:00";
-        videoInfo.bit_rate = "bit_rate";
-        videoInfo.frame_rate = "frame_rate";
-        videoInfo.coding_format = "codeing_format";
-        videoInfo.resolving = "120*220";
+        videoInfo.a_bit_rate = audioInfo.bit_rate;
+        videoInfo.sample_rate = audioInfo.sample_rate;
+        videoInfo.channels = audioInfo.channels;
         info->setInfo(videoInfo);
     }
     else if (audio_type.contains(name.right(name.length() - name.indexOf(".")))){
-        MediaInfo::AudioInfo audioInfo;
-        audioInfo.name = name;
-        audioInfo.type = nameTotype[name.right(name.length() - name.indexOf("."))];
-        audioInfo.path = path;
-        audioInfo.size = "20K";
-        audioInfo.duration = "30:00";
-        audioInfo.bit_rate = "bit_rate";
-        audioInfo.coding_format = "codeing_format";
-        audioInfo.channels = "channels";
-        audioInfo.album = "album";
-        audioInfo.singer = "singer";
         info->setInfo(audioInfo);
     }
 }

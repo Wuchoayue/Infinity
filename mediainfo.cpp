@@ -29,7 +29,7 @@ MediaInfo::~MediaInfo()
 
 void MediaInfo::setInfo(VideoInfo videoInfo)
 {
-    info->setRowCount(9);
+    info->setRowCount(11);
 
     //基础信息
     info->setItem(0, 0, new QTableWidgetItem("名称"));
@@ -41,8 +41,10 @@ void MediaInfo::setInfo(VideoInfo videoInfo)
     //高级信息
     info->setItem(5, 0, new QTableWidgetItem("视频码率"));
     info->setItem(6, 0, new QTableWidgetItem("帧率"));
-    info->setItem(7, 0, new QTableWidgetItem("编码格式"));
-    info->setItem(8, 0, new QTableWidgetItem("分辨率"));
+    info->setItem(7, 0, new QTableWidgetItem("分辨率"));
+    info->setItem(8, 0, new QTableWidgetItem("音频码率"));
+    info->setItem(9, 0, new QTableWidgetItem("采样率"));
+    info->setItem(10, 0, new QTableWidgetItem("声道数"));
 
     //设置信息
     info->setItem(0, 1, new QTableWidgetItem(videoInfo.name));
@@ -50,10 +52,12 @@ void MediaInfo::setInfo(VideoInfo videoInfo)
     info->setItem(2, 1, new QTableWidgetItem(videoInfo.path));
     info->setItem(3, 1, new QTableWidgetItem(videoInfo.size));
     info->setItem(4, 1, new QTableWidgetItem(videoInfo.duration));
-    info->setItem(5, 1, new QTableWidgetItem(videoInfo.bit_rate));
+    info->setItem(5, 1, new QTableWidgetItem(videoInfo.v_bit_rate));
     info->setItem(6, 1, new QTableWidgetItem(videoInfo.frame_rate));
-    info->setItem(7, 1, new QTableWidgetItem(videoInfo.coding_format));
-    info->setItem(8, 1, new QTableWidgetItem(videoInfo.resolving));
+    info->setItem(7, 1, new QTableWidgetItem(videoInfo.resolving));
+    info->setItem(8, 1, new QTableWidgetItem(videoInfo.a_bit_rate));
+    info->setItem(9, 1, new QTableWidgetItem(videoInfo.sample_rate));
+    info->setItem(10, 1, new QTableWidgetItem(videoInfo.channels));
 
     show();
 }
@@ -71,7 +75,7 @@ void MediaInfo::setInfo(AudioInfo audioInfo)
 
     //高级信息
     info->setItem(5, 0, new QTableWidgetItem("音频码率"));
-    info->setItem(6, 0, new QTableWidgetItem("编码格式"));
+    info->setItem(6, 0, new QTableWidgetItem("采样率"));
     info->setItem(7, 0, new QTableWidgetItem("声道数"));
     info->setItem(8, 0, new QTableWidgetItem("专辑"));
     info->setItem(9, 0, new QTableWidgetItem("演唱者"));
@@ -83,7 +87,7 @@ void MediaInfo::setInfo(AudioInfo audioInfo)
     info->setItem(3, 1, new QTableWidgetItem(audioInfo.size));
     info->setItem(4, 1, new QTableWidgetItem(audioInfo.duration));
     info->setItem(5, 1, new QTableWidgetItem(audioInfo.bit_rate));
-    info->setItem(6, 1, new QTableWidgetItem(audioInfo.coding_format));
+    info->setItem(6, 1, new QTableWidgetItem(audioInfo.sample_rate));
     info->setItem(7, 1, new QTableWidgetItem(audioInfo.channels));
     info->setItem(8, 1, new QTableWidgetItem(audioInfo.album));
     info->setItem(9, 1, new QTableWidgetItem(audioInfo.singer));

@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QMenu>
 #include "durationslider.h"
+
 QT_BEGIN_NAMESPACE
 class QToolButton;
 class QSlider;

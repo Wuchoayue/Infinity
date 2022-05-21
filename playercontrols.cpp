@@ -224,7 +224,7 @@ PlayerControls::PlayerControls(QWidget *parent)
     QHBoxLayout *center_layout = new QHBoxLayout;
     QHBoxLayout *right_layout = new QHBoxLayout;
 
-    main_layout->setContentsMargins(0, 0, 0, 0);
+    main_layout->setContentsMargins(5, 0, 5, 5);
     wave_layout->setContentsMargins(0, 0, 0, 0);
     progressBar_layout->setContentsMargins(0, 0, 0, 0);
     control_layout->setContentsMargins(0, 0, 0, 0);
@@ -254,11 +254,11 @@ PlayerControls::PlayerControls(QWidget *parent)
     center_layout->addSpacing(10);
     center_layout->addWidget(durationStep_button, 1);  //快进快退帧数
     center_layout->addSpacing(10);
-    center_layout->addWidget(invert_button, 1);  //倒序播放
-    center_layout->addSpacing(10);
     center_layout->addWidget(preOne_button, 1);//控制上一首
     center_layout->addWidget(playStatus_button, 1);  //控制播放状态
     center_layout->addWidget(nextOne_button, 1);  //控制下一首
+    center_layout->addSpacing(10);
+    center_layout->addWidget(invert_button, 1);  //倒序播放
     center_layout->addSpacing(10);
     center_layout->addWidget(volumeShow_button, 1);   //声音控制
     center_layout->addStretch();
