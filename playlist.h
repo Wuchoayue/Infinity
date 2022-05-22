@@ -16,9 +16,10 @@ public:
     ~PlayList();
 
 public:
-    PlayListView *playList_listView;
+    PlayListView *getPlayList_listView() const;
 
 private:
+    PlayListView *playList_listView;
     QLabel *title_label;
     QLabel *num_label;
     QPushButton *clear_button;
