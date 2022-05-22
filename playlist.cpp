@@ -3,11 +3,23 @@
 PlayList::PlayList(QWidget *parent)
     : QWidget(parent)
 {
+    setAttribute(Qt::WA_StyledBackground, true);
+    //加载qss样式文件
+    QFile file(":/qss/playList.qss");
+    file.open(QFile::ReadOnly);
+    QTextStream filetext(&file);
+    QString stylesheet = filetext.readAll();
+    setStyleSheet(stylesheet);
+    file.close();
+
     //控件定义
     playList_listView = new PlayListView(this);
     title_label = new QLabel("播放列表", this);
+    title_label->setObjectName("title_label");
     num_label = new QLabel("0个资源", this);
-    clear_button = new QPushButton("清空", this);
+    num_label->setObjectName("num_label");
+    clear_button = new QPushButton(this);
+    clear_button->setIcon(QIcon(":/icon/clear.svg"));
 
     //设置布局
     QVBoxLayout *left_layout = new QVBoxLayout;
@@ -40,4 +52,9 @@ PlayList::PlayList(QWidget *parent)
 PlayList::~PlayList()
 {
 
+}
+
+PlayListView *PlayList::getPlayList_listView() const
+{
+    return playList_listView;
 }

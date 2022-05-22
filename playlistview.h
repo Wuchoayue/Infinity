@@ -9,6 +9,7 @@
 #include <QMimeData>
 #include <QSqlQuery>
 #include <QPushButton>
+#include <QMessageBox>
 #include "playlistmodel.h"
 
 class PlayListView : public QListView
@@ -38,6 +39,11 @@ public:
     void normalNextOne();   //自动播放下一首
     int totalMedia();
     void clearMedia();  //清空播放列表
+    bool existMedia(QString path);  //判断是否存在某个路径
+    bool canPlay(QModelIndex index); //判断是否可以播放
+    bool isFileExist(QString fileName); //判断文件是否存在
+    void removeOne(QModelIndex index);  //删除一个播放列表项
+    bool isAudio(QString path); //判断是不是音频
 
 signals:
     void changeMedia(QString path); //改变播放对象
@@ -48,10 +54,6 @@ signals:
 
 private:
     PlayListModel *playList_model;  //播放列表模型
-    QMenu *playList_menu;    //选项菜单
-    QAction *showMedia_action;   //查看音视频信息
-    QAction *delMedia_action;   //删除选中的媒体
-    QAction *playMedia_action;  //播放选中的媒体
     QString currentPath = "";   //当前正在播放的音视频
     PlayMode currentPlayMode = PlayMode::Sequential;    //播放模式
 };
