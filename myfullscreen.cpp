@@ -28,6 +28,9 @@ myfullscreen::myfullscreen(QWidget *parent)
     tm->start();
     connect(tm, &QTimer::timeout, this, &myfullscreen::turnToInvisable);
     vw->setUpdatesEnabled(false);
+
+    //波形图
+    waveform.setParent(this);
 }
 
 //设置位置
@@ -37,6 +40,7 @@ void myfullscreen::setPosition() {
     pc->setGeometry(0,height()-70,width(),70);
     vw->setGeometry(0,0,width(),height());
     pc->getVolumeControl()->move(pc->getVolumeShow_button()->x() - 12, height() - 165);
+    waveform.setGeometry(0, 0, width(), height() - 70);
 }
 
 //转为不可见
@@ -64,6 +68,11 @@ PlayerControls *myfullscreen::getPc() const
 QWidget *myfullscreen::getVw() const
 {
     return vw;
+}
+
+Waveform *myfullscreen::getWaveform()
+{
+    return &waveform;
 }
 
 void myfullscreen::turnToFullScreen() {

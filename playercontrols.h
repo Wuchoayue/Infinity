@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QMenu>
 #include "durationslider.h"
+
 QT_BEGIN_NAMESPACE
 class QToolButton;
 class QSlider;
@@ -38,10 +39,10 @@ public:
     QSlider *getVolume_slider() const;
     QWidget *getVolumeControl() const;
     QToolButton *getVolumeShow_button() const;
+    QToolButton *getVolumeGraphy_button() const;
 
 signals:
     void changeMediaDirShow_signal(); //改变目录显示状态
-    void invert_signal();   //倒放
     void durationStep_signal(int);  //进度变化幅度
     void playMode_signal(int);  //播放模式
     void preOne_signal();   //上一首
@@ -55,7 +56,6 @@ signals:
 
 private:
     QToolButton *changeMediaDirShow_button = nullptr;   //改变目录显示状态
-    QPushButton *invert_button = nullptr;   //倒放控制
     QPushButton *durationStep_button = nullptr;    //进度改变幅度
     int durationStep_value = 4; //进度改变幅度
     QToolButton *playMode_button = nullptr; //播放模式控制

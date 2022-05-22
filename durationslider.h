@@ -15,18 +15,23 @@ class DurationSlider : public QSlider
 public:
     DurationSlider(QWidget * parent = 0);
     ~DurationSlider();
+    Thumbnail* thumbnail = nullptr; //缩略图
+    void setIsVideo(bool newIsVideo);
 
 signals:
     void sliderReleasedAt(int value);
+    void s_valueSignal(int s_value);
 
 private:
     bool isMoving;
     int m_value;
+    int s_value;
     bool mousePress;
-    Thumbnail* thumbnail = nullptr; //缩略图
+
     int thumbnail_x;
     int thumbnail_y;
     QTimer* tm = nullptr;
+    bool isVideo = false;   //正在播放的是不是视频
 
 protected:
     void mousePressEvent(QMouseEvent *event);

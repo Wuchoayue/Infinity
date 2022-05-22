@@ -13,7 +13,7 @@
 #include <QBoxLayout>
 #include "windows.h"
 #include "playercontrols.h"
-#include "durationslider.h"
+#include "waveform.h"
 
 class myfullscreen : public QWidget
 {
@@ -30,9 +30,12 @@ public:
     //转为不可见
     void turnToInvisable();
 
+
 public:
     PlayerControls *getPc() const;
     QWidget *getVw() const;
+
+    Waveform *getWaveform();
 
 signals:
     void on_clicked();
@@ -44,6 +47,8 @@ private:
     int pcLifeTime = 10;    //计数器
     QSize mysize;
     QTimer* tm = nullptr;   //控制模块定时器
+    Waveform waveform; //波形图
+
 
 protected:
     void resizeEvent(QResizeEvent* event);

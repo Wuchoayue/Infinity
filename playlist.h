@@ -16,8 +16,6 @@ public:
     ~PlayList();
 
 public:
-
-
     PlayListView *getPlayList_listView() const;
 
 private:

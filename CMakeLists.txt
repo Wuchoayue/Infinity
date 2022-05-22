@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 project(Infinity VERSION 0.1 LANGUAGES CXX)
 
+
+
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -34,6 +37,7 @@ set(PROJECT_SOURCES
     myfullscreen.h myfullscreen.cpp
     thumbnail.cpp thumbnail.h
     mediainfo.h mediainfo.cpp
+    waveform.h waveform.cpp
 )
 
 qt6_add_resources(QRC_FILES ${QRC_SOURCE_FILES})
@@ -85,3 +89,7 @@ set_target_properties(Infinity PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Infinity)
 endif()
+
+
+
+
