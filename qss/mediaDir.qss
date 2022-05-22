@@ -1,0 +1,125 @@
+MediaDir {
+    background-color: rgb(255, 255, 255);
+}
+
+QWidget#left_widget {
+    border-right: 1px solid gray;
+    background-color: rgb(196, 255, 220);
+}
+
+MediaDir QListWidget {
+    background-color: rgb(217, 255, 232);
+    border: none;
+    margin-top: 10px;
+    padding-left: 2px;
+    border-right: 1px solid gray;
+}
+
+QListWidget::item {
+    height: 30px;
+}
+
+QListWidget::item:selected {
+    background-color: rgb(196, 255, 220);
+    border: none;
+    color: #000000;
+}
+
+QLineEdit {
+    width: 80px;
+    height: 30px;
+}
+
+QLabel {
+    font: 15px;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+QHeaderView {
+    gridline-color: transparent;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+QTableView {
+    border: none;
+    margin-top: 10px;
+    gridline-color: transparent;
+}
+
+QTableView::item {
+    border: none;
+}
+
+QTableView::item:selected {
+    background-color: rgb(196, 255, 220);
+    color: #000000;
+}
+
+QPushButton#addMediaDir_button {
+    margin-top:12px;
+    margin-right: 10px;
+    background-color: transparent;
+    text-align: center;
+    font-size: 12px;
+    border: none;
+}
+
+QPushButton {
+    text-align: right;
+    font-size: 15px;
+    margin-top: 12px;
+    margin-right: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(196, 255, 220);
+}
+
+QPushButton#close_button {
+    margin-top:12px;
+    background-color: transparent;
+    text-align: center;
+    font-size: 12px;
+    border: none;
+}
+
+QScrollBar::handle:vertical {
+    background: rgba(51,103,204,25%);
+    border: 0px solid grey;
+    border-radius:3px;
+    width: 8px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: rgba(51,103,204,50%);
+    border: 0px solid grey;
+    border-radius:3px;
+    width: 8px;
+}
+
+QScrollBar::vertical {
+    border-width:1px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 10%);
+    margin:0px 0px 0px 0px;
+    border-radius:3px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background:rgba(255,255,255,10%);
+}
+
+QScrollBar::add-line:vertical {
+    height:6px;
+    width:6px;
+    background-color: transparent;
+    subcontrol-position:bottom;
+}
+
+QScrollBar::sub-line:vertical {
+    height:6px;
+    width:6px;
+    background-color: transparent;
+    subcontrol-position:top;
+}
