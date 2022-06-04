@@ -34,7 +34,6 @@ private:
     bool isMediaDirShow = false;    //当前是否打开了目录
     PlayerControls *playerControls;     //控制部分
     myfullscreen *video;   //播放模块
-    //Waveform* waveform = nullptr;   //音频波形图
     Player *player;   //后端播放模块
     bool isPlay = false;    //是否在播放
     double mediaDuration = -1;   //音视频全长

@@ -1338,7 +1338,6 @@ int CreateVideo(AVInfo *av)
     SDL_ShowWindow(av->screen);
     av->screen_mutex = SDL_CreateMutex();
 
-    return 0;
     if(av->wid) return 0;
 
     //等待消息到来
@@ -2015,6 +2014,42 @@ bool DrawJPG(const char file_path[], const char url[])
     return false;
 }
 
+//给定文件路径，获取专辑封面数据，存入data中，并放回数据的大小，返回值为-1获取失败
+int GetAlbumImg(const char *file_path, uint8_t *data)
+{
+    //声明相关变量
+    AVFormatContext *avFormatCtx = avformat_alloc_context();
+
+    //打开视频文件
+    if (avformat_open_input(&avFormatCtx, file_path, NULL, NULL) != 0)
+    {
+        printf("Could not open file!\n");
+        avformat_close_input(&avFormatCtx);
+        return -1;
+    }
+
+    //找到文件流信息
+    if (avformat_find_stream_info(avFormatCtx, NULL) < 0)
+    {
+        printf("Could not find stream info!\n");
+        avformat_close_input(&avFormatCtx);
+        return -1;
+    }
+
+    //查找专辑图片
+    for (int i = 0; i < int(avFormatCtx->nb_streams); ++i)
+    {
+        if (avFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC)
+        {
+            AVPacket pkt = avFormatCtx->streams[i]->attached_pic;
+            memcpy_s(data, pkt.size, pkt.data, pkt.size);
+            avformat_close_input(&avFormatCtx);
+            return pkt.size;
+        }
+    }
+    return -1;
+}
+
 //获取文件视音频流基本信息，返回获取成功与否
 bool GetInfo(const char file_path[], VideoInfo *vi, AudioInfo *ai)
 {
@@ -2094,7 +2129,7 @@ bool GetInfo(const char file_path[], VideoInfo *vi, AudioInfo *ai)
 
         //设置专辑信息
         AVDictionaryEntry *tag = nullptr;
-        while (tag = av_dict_get(avFormatCtx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))
+        while ((tag = av_dict_get(avFormatCtx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX)))
         {
             if(strcmp(tag->key, "album") == 0) {
                 ai->album = tag->value;
@@ -2102,10 +2137,6 @@ bool GetInfo(const char file_path[], VideoInfo *vi, AudioInfo *ai)
             else if(strcmp(tag->key, "artist") == 0) {
                 ai->singer = tag->value;
             }
-            QString keyString = tag->key;
-            qDebug() << tag->value;
-            QString valueString = QString::fromUtf8(tag->value);
-            qDebug() << keyString + " " + valueString;
         }
 
     }

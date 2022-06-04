@@ -9,15 +9,15 @@ Waveform::Waveform(QWidget *parent)
     : QWidget{parent}
 {
     //this->setFixedSize(720,220);//固定大小
-    switchButton = new QPushButton(this);
-    switchButton->setFixedSize(15,15);
-    switchButton->move(5,5);
-    connect(switchButton,&QPushButton::clicked,this,[=]{
-        if(style=="a")
-            setStyle("b");
-        else
-            setStyle("a");
-    });
+//    switchButton = new QPushButton(this);
+//    switchButton->setFixedSize(15,15);
+//    switchButton->move(5,5);
+//    connect(switchButton,&QPushButton::clicked,this,[=]{
+//        if(style=="a")
+//            setStyle("b");
+//        else
+//            setStyle("a");
+//    });
 
     buf = nullptr;
     bufSize = -1;
@@ -32,8 +32,8 @@ Waveform::Waveform(QWidget *parent)
 
     style = "b";
     paintFlag = false;
-    //QTimer::singleShot(delay, this,SLOT(onTimer()));
-
+    QTimer::singleShot(delay, this,SLOT(onTimer()));
+    filepath=":/icon/background.png";
 }
 
 Waveform::~Waveform()
@@ -104,9 +104,15 @@ void Waveform::paintEvent(QPaintEvent *e)
     }
     else
     {
-        //QPainter painter(this);
-        //painter.drawPixmap(rect(),QPixmap(":/icon/default.svg"));
+
+      QPainter painter(this);
+      painter.save();
+      painter.drawPixmap(rect(),QPixmap(filepath));
+      painter.restore();
     }
+
+
+
 
 }
 
@@ -116,24 +122,21 @@ void Waveform::setPlayer(Player*p){
 
 void Waveform::onTimer()
 {
-
+    // 一直开
     update();
-    if(paintFlag)
-        QTimer::singleShot(delay, this,SLOT(onTimer()));
+    //if(paintFlag)
+    QTimer::singleShot(delay, this,SLOT(onTimer()));
 
 }
 
-void Waveform::control(QString str)
+void Waveform::setPath(QString path)
 {
-    if(str == "start" &&!paintFlag)
-    {
-        paintFlag = true;
-        QTimer::singleShot(0, this,SLOT(onTimer()));
-    }
-    else if(str == "stop"&&paintFlag)
-    {
-        paintFlag = false;
-    }
+    filepath = path;
+}
+
+void Waveform::control()
+{
+    paintFlag = !paintFlag;
 }
 
 void Waveform::setStyle(QString str)

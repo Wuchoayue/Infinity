@@ -380,4 +380,9 @@ bool PlayListView::isAudio(QString path)
     return playList_model->isAudio(path);
 }
 
+QString PlayListView::getCover(QString path)
+{
+    return playList_model->getCover(path);
+}
+
 

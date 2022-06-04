@@ -62,8 +62,6 @@ void PlayListModel::insert(const QUrl &path)
         md.addData(&f);
         QByteArray md5 = md.result().toHex();
         f.close();
-        VideoInfo videoInfo;
-        AudioInfo audioInfo;
         if(DrawJPG(path.toString().toStdString().c_str(), cover.toStdString().c_str())) {
             Element ele(cover, path.fileName(), path.toString(), md5);
             playList.append(ele);
@@ -71,10 +69,23 @@ void PlayListModel::insert(const QUrl &path)
             insertRow(rowCount(), item);
         }
         else {
-            Element ele(":/icon/default.svg", path.fileName(), path.toString(), md5);
-            playList.append(ele);
-            QStandardItem *item = new QStandardItem(QIcon(":/icon/default.svg"), path.fileName());
-            insertRow(rowCount(), item);
+            uint8_t *tmp = new uint8_t[1000000];
+            int size = 0;
+            if((size = GetAlbumImg(path.toString().toStdString().c_str(), tmp)) > 0) {
+                QImage img = QImage::fromData(tmp, size);
+                img.save(cover, "PNG", 100);
+                Element ele(cover, path.fileName(), path.toString(), md5);
+                playList.append(ele);
+                QStandardItem *item = new QStandardItem(QIcon(cover), path.fileName());
+                insertRow(rowCount(), item);
+            }
+            else {
+                Element ele(":/icon/default.svg", path.fileName(), path.toString(), md5);
+                playList.append(ele);
+                QStandardItem *item = new QStandardItem(QIcon(":/icon/default.svg"), path.fileName());
+                insertRow(rowCount(), item);
+            }
+            delete[] tmp;
         }
     }
     emit changePlayList();
@@ -183,4 +194,9 @@ bool PlayListModel::isAudio(QString path)
     QUrl p(path);
     QString name = p.fileName();
     return audio_type.contains(name.right(name.length() - name.indexOf(".")));
+}
+
+QString PlayListModel::getCover(QString path)
+{
+    return playList[pathTorow[path]].cover;
 }

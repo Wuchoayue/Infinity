@@ -565,6 +565,12 @@
 			"MU",
 			"EWIEGA46WW/moc_thumbnail.cpp",
 			null
+		],
+		[
+			"E:/CourseProject/Infinity/waveform.h",
+			"MU",
+			"EWIEGA46WW/moc_waveform.cpp",
+			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -637,7 +643,8 @@
 		[ "E:/CourseProject/Infinity/playlistmodel.cpp", "MU", null ],
 		[ "E:/CourseProject/Infinity/playlistview.cpp", "MU", null ],
 		[ "E:/CourseProject/Infinity/sonic.cpp", "MU", null ],
-		[ "E:/CourseProject/Infinity/thumbnail.cpp", "MU", null ]
+		[ "E:/CourseProject/Infinity/thumbnail.cpp", "MU", null ],
+		[ "E:/CourseProject/Infinity/waveform.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

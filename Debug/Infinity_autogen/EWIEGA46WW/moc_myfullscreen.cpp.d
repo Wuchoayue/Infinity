@@ -5,6 +5,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_myfullscreen.cpp
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QRect \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QSize \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QSizeF \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QString \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QTimer \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qabstractitemmodel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qalgorithms.h \
@@ -96,7 +97,9 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_myfullscreen.cpp
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qvariant.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qvarlengtharray.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qversiontagging.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QImage \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/QMouseEvent \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/QPainter \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/QTransform \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qaction.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qbitmap.h \
@@ -113,6 +116,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_myfullscreen.cpp
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qinputdevice.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qkeysequence.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpaintdevice.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpainter.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpalette.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpen.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtGui/qpicture.h \
@@ -189,5 +193,95 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_myfullscreen.cpp
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qtwidgetsglobal.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtWidgets/qwidget.h \
   E:/CourseProject/Infinity/durationslider.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_assert.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_atomic.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_audio.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_blendmode.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_clipboard.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_config.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_cpuinfo.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_endian.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_error.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_events.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_filesystem.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_gamecontroller.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_gesture.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_haptic.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_hidapi.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_hints.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_joystick.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_keyboard.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_keycode.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_loadso.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_locale.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_log.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_main.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_messagebox.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_metal.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_misc.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_mouse.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_mutex.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_pixels.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_platform.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_power.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_quit.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_rect.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_render.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_rwops.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_scancode.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_sensor.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_shape.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_stdinc.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_surface.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_system.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_thread.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_timer.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_touch.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_version.h \
+  E:/CourseProject/Infinity/include/SDL2/SDL_video.h \
+  E:/CourseProject/Infinity/include/SDL2/begin_code.h \
+  E:/CourseProject/Infinity/include/SDL2/close_code.h \
+  E:/CourseProject/Infinity/include/libavcodec/avcodec.h \
+  E:/CourseProject/Infinity/include/libavcodec/bsf.h \
+  E:/CourseProject/Infinity/include/libavcodec/codec.h \
+  E:/CourseProject/Infinity/include/libavcodec/codec_desc.h \
+  E:/CourseProject/Infinity/include/libavcodec/codec_id.h \
+  E:/CourseProject/Infinity/include/libavcodec/codec_par.h \
+  E:/CourseProject/Infinity/include/libavcodec/packet.h \
+  E:/CourseProject/Infinity/include/libavcodec/version.h \
+  E:/CourseProject/Infinity/include/libavformat/avformat.h \
+  E:/CourseProject/Infinity/include/libavformat/avio.h \
+  E:/CourseProject/Infinity/include/libavformat/version.h \
+  E:/CourseProject/Infinity/include/libavutil/attributes.h \
+  E:/CourseProject/Infinity/include/libavutil/avconfig.h \
+  E:/CourseProject/Infinity/include/libavutil/avstring.h \
+  E:/CourseProject/Infinity/include/libavutil/avutil.h \
+  E:/CourseProject/Infinity/include/libavutil/buffer.h \
+  E:/CourseProject/Infinity/include/libavutil/channel_layout.h \
+  E:/CourseProject/Infinity/include/libavutil/common.h \
+  E:/CourseProject/Infinity/include/libavutil/cpu.h \
+  E:/CourseProject/Infinity/include/libavutil/dict.h \
+  E:/CourseProject/Infinity/include/libavutil/error.h \
+  E:/CourseProject/Infinity/include/libavutil/frame.h \
+  E:/CourseProject/Infinity/include/libavutil/hwcontext.h \
+  E:/CourseProject/Infinity/include/libavutil/imgutils.h \
+  E:/CourseProject/Infinity/include/libavutil/intfloat.h \
+  E:/CourseProject/Infinity/include/libavutil/log.h \
+  E:/CourseProject/Infinity/include/libavutil/macros.h \
+  E:/CourseProject/Infinity/include/libavutil/mathematics.h \
+  E:/CourseProject/Infinity/include/libavutil/mem.h \
+  E:/CourseProject/Infinity/include/libavutil/pixdesc.h \
+  E:/CourseProject/Infinity/include/libavutil/pixfmt.h \
+  E:/CourseProject/Infinity/include/libavutil/rational.h \
+  E:/CourseProject/Infinity/include/libavutil/samplefmt.h \
+  E:/CourseProject/Infinity/include/libavutil/time.h \
+  E:/CourseProject/Infinity/include/libavutil/version.h \
+  E:/CourseProject/Infinity/include/libswresample/swresample.h \
+  E:/CourseProject/Infinity/include/libswresample/version.h \
+  E:/CourseProject/Infinity/include/libswscale/swscale.h \
+  E:/CourseProject/Infinity/include/libswscale/version.h \
+  E:/CourseProject/Infinity/player.h \
   E:/CourseProject/Infinity/playercontrols.h \
-  E:/CourseProject/Infinity/thumbnail.h
+  E:/CourseProject/Infinity/thumbnail.h \
+  E:/CourseProject/Infinity/waveform.h

@@ -14,6 +14,8 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
 {
     // 初始化
     this->resize(680, 480);
+    this->setMinimumWidth(680);
+    this->setMinimumHeight(480);
     setAcceptDrops(true); //设置可以接收拖动事件
     grabKeyboard();
     setAttribute(Qt::WA_StyledBackground, true);
@@ -55,17 +57,8 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
 
     //波形图部分
     connect(playerControls, &PlayerControls::volumeGraphy_signal,this,[=]{
-        if(video->getWaveform()->isHidden())
-        {
-            video->getWaveform()->show();
-
-        }
-        else{
-            video->getWaveform()->hide();
-        }
+        video->getWaveform()->control();
     });
-
-
 
     //布局
     QHBoxLayout *layout = new QHBoxLayout;
@@ -365,14 +358,13 @@ void InfinityPlayer::playMedia(QString path)
     duration_slider->setIsVideo(player->isVideo());
     if(player->isVideo()) {
         video->getWaveform()->hide();
-        video->getWaveform()->control("stop");
         video->getPc()->getVolumeGraphy_button()->setEnabled(false);
     }
     else
     {
-        video->getWaveform()->control("start");
         video->getWaveform()->show();
         video->getPc()->getVolumeGraphy_button()->setEnabled(true);
+        video->getWaveform()->setPath(playList->getPlayList_listView()->getCover(path));
     }
     player->SetSpeed(currentPlaySpeed);
     player->SetVolume(currentVolume);
@@ -420,14 +412,13 @@ void InfinityPlayer::on_preMedia(QString path)
     duration_slider->setIsVideo(player->isVideo());
     if(player->isVideo()) {
         video->getWaveform()->hide();
-        video->getWaveform()->control("stop");
         video->getPc()->getVolumeGraphy_button()->setEnabled(false);
     }
     else
     {
-        video->getWaveform()->control("start");
         video->getWaveform()->show();
         video->getPc()->getVolumeGraphy_button()->setEnabled(true);
+        video->getWaveform()->setPath(playList->getPlayList_listView()->getCover(path));
     }
     player->SetVolume(currentVolume);
     player->SetSpeed(currentPlaySpeed);

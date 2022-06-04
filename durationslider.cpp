@@ -76,7 +76,6 @@ void DurationSlider::mouseMoveEvent(QMouseEvent *event)
     }
     else {
         int tmp = parentWidget()->parentWidget()->parentWidget()->x();
-        //qDebug()<<tmp<<thumbnail_x;
         if(tmp + 100 > thumbnail_x) {
             thumbnail_x = tmp + 100;
         }
@@ -91,13 +90,12 @@ void DurationSlider::mouseMoveEvent(QMouseEvent *event)
     if(mousePress) {
         m_value = value + 0.5;
         isMoving = true;
-        thumbnail->setVisible(true);
+        thumbnail->setVisible(isVideo);
         thumbnail->raise();
     }
     else {
         tm->start();
     }
-//    qDebug()<<s_value;
     emit s_valueSignal(s_value);
 }
 

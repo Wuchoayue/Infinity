@@ -1,0 +1,94 @@
+PlayerControls {
+    background: rgba(250,250,250,1);
+}
+
+QToolButton#changeMediaDirShow {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 12px;
+}
+
+QPushButton#invert {
+    font-size: 14px;
+    border-radius: 1px;
+    height: 21px;
+    width: 21px;
+}
+
+QPushButton#durationStep {
+    font-size: 14px;
+    border-radius: 1px;
+    height: 21px;
+    width: 21px
+}
+
+QToolButton#playMode {
+    qproperty-iconSize: 21px 21px;
+    border-radius:12px;
+}
+
+QToolButton#preOne {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 12px;
+}
+
+QToolButton#playStatus {
+    qproperty-iconSize: 34px 34px;
+    border-radius:1 8px;
+}
+
+QToolButton#nextOne {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 12px;
+}
+
+QPushButton#playSpeed {
+    font-size: 14px;
+    border-radius: 1px;
+    height: 21px;
+    width: 21px;
+}
+
+QToolButton#volumeShow {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 12px;
+}
+
+QSlider::groove:horizontal {
+    height: 3px;
+    left: 5px;
+    right: 5px;
+    border: none;
+    border-radius: 1px;
+    background: rgba(143,188,143,1);
+}
+
+QSlider::handle:horizontal {
+    width: 9px;
+    margin: -3px -3px -3px -3px;
+    background: rgba(60,179,113,1);
+    border-radius:4px;
+}
+
+QSlider::sub-page:horizontal{
+    background:rgba(60,179,113,1);
+}
+
+QToolButton#volume {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 12px;
+}
+
+QToolButton#volumeGraphy {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 12px;
+}
+
+QToolButton#fullScreen {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 1px;
+}
+
+QToolButton#showList {
+    qproperty-iconSize: 21px 21px;
+    border-radius: 12px;
+}

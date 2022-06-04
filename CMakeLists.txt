@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(Infinity VERSION 0.1 LANGUAGES CXX)
 
-
-
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -89,7 +86,3 @@ set_target_properties(Infinity PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Infinity)
 endif()
-
-
-
-

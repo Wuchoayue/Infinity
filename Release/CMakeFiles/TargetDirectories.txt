@@ -1,0 +1,5 @@
+E:/CourseProject/Infinity/Release/CMakeFiles/Infinity.dir
+E:/CourseProject/Infinity/Release/CMakeFiles/edit_cache.dir
+E:/CourseProject/Infinity/Release/CMakeFiles/rebuild_cache.dir
+E:/CourseProject/Infinity/Release/CMakeFiles/Infinity_autogen_timestamp_deps.dir
+E:/CourseProject/Infinity/Release/CMakeFiles/Infinity_autogen.dir

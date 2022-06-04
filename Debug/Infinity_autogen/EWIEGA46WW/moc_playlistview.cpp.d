@@ -1,4 +1,5 @@
 E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_playlistview.cpp: E:/CourseProject/Infinity/playlistview.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QCryptographicHash \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QDir \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QFile \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QHash \
@@ -9,6 +10,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_playlistview.cpp
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QSet \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QSize \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QSizeF \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/QString \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/QUrl \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qabstractitemmodel.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qalgorithms.h \
@@ -33,6 +35,7 @@ E:/CourseProject/Infinity/Debug/Infinity_autogen/EWIEGA46WW/moc_playlistview.cpp
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qcontainertools_impl.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qcontiguouscache.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qcoreevent.h \
+  D:/Qt/6.2.4/msvc2019_64/include/QtCore/qcryptographichash.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qdatastream.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qdatetime.h \
   D:/Qt/6.2.4/msvc2019_64/include/QtCore/qdebug.h \

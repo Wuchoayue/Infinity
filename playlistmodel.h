@@ -49,6 +49,7 @@ public:
     void insertAll(QUrl path, QString cover, QByteArray md5);   //加载时进行插入
     void clear();   //清空播放列表
     bool isAudio(QString path); //判断是不是音频
+    QString getCover(QString path); //通过路径寻找封面
 
 signals:
     void changePlayList();

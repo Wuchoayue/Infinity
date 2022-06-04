@@ -1,0 +1,21 @@
+PlayList {
+    border-left: 1px solid gray;
+}
+
+QPushButton {
+    background-color: transparent;
+}
+
+QLabel#title_label {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+QListView {
+    background-color: transparent;
+    border: none;
+}
+
+QListView::item {
+    height: 25px;
+}

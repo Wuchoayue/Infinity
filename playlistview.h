@@ -44,6 +44,7 @@ public:
     bool isFileExist(QString fileName); //判断文件是否存在
     void removeOne(QModelIndex index);  //删除一个播放列表项
     bool isAudio(QString path); //判断是不是音频
+    QString getCover(QString path); //通过文件路径寻找封面
 
 signals:
     void changeMedia(QString path); //改变播放对象

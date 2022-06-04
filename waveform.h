@@ -13,10 +13,10 @@ class Waveform : public QWidget
 public:
     explicit Waveform(QWidget *parent = nullptr);
     ~Waveform();
-    void control(QString);//控制开始绘图和暂停绘图
+    void control();//控制开始绘图和暂停绘图
     void setStyle(QString);
 
-
+    void setPath(QString);
     void setPlayer(Player* );
 
 private:
