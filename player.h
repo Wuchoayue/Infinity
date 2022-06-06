@@ -86,7 +86,7 @@ struct VideoPicture
 struct AVInfo
 {
     //视频文件的全局参数
-    int type;//0代表视频，1代表音频
+    int type_music;//0代表视频，1代表音频
     int quit;//关闭视频的标志
     int resized;//窗口尺寸改变的标志
     char file_name[1024];//视频文件名
@@ -141,7 +141,7 @@ struct AVInfo
     double audio_pts;//当前解码音频帧的时间戳（播放完成时），经过时基换算
 };
 
-//后台播放器类，负责实现视频播放的功能
+//后台播放器类，负责实现视音频播放的功能
 class Player
 {
 public:

@@ -1,5 +1,0 @@
-E:/CourseProject/Infinity/副本/Infinity-version-3.3/Debug/CMakeFiles/Infinity.dir
-E:/CourseProject/Infinity/副本/Infinity-version-3.3/Debug/CMakeFiles/edit_cache.dir
-E:/CourseProject/Infinity/副本/Infinity-version-3.3/Debug/CMakeFiles/rebuild_cache.dir
-E:/CourseProject/Infinity/副本/Infinity-version-3.3/Debug/CMakeFiles/Infinity_autogen_timestamp_deps.dir
-E:/CourseProject/Infinity/副本/Infinity-version-3.3/Debug/CMakeFiles/Infinity_autogen.dir

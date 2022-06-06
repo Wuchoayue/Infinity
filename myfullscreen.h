@@ -34,11 +34,12 @@ public:
 public:
     PlayerControls *getPc() const;
     QWidget *getVw() const;
-
     Waveform *getWaveform();
+    QTimer *getTm() const;
 
 signals:
     void on_clicked();
+    void keyEvent(QKeyEvent *event);
 
 private:
     QWidget *vw = nullptr;  //视频窗口
@@ -53,6 +54,7 @@ private:
 protected:
     void resizeEvent(QResizeEvent* event);
     void mouseMoveEvent(QMouseEvent *e);
+    void keyPressEvent(QKeyEvent *event);   //键盘事件
 };
 
 #endif // MYFULLSCREEN_H

@@ -1,3 +1,0 @@
-E:/CourseProject/Infinity/Release/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_c70e9.dir
-E:/CourseProject/Infinity/Release/CMakeFiles/CMakeTmp/CMakeFiles/edit_cache.dir
-E:/CourseProject/Infinity/Release/CMakeFiles/CMakeTmp/CMakeFiles/rebuild_cache.dir

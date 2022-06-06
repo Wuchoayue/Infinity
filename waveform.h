@@ -23,6 +23,7 @@ private:
     void closeEvent(QCloseEvent *event);//关闭事件
     void paintEvent(QPaintEvent *);//绘图事件
     Uint8*buf;
+    short*data;
     int bufSize;
     int numSamples;
     bool paintFlag;
@@ -40,6 +41,7 @@ signals:
 
 private slots:
     void onTimer();
+    void loadData();
 
 };
 

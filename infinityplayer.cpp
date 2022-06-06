@@ -43,6 +43,14 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
 
     //播放控制部分
     video = new myfullscreen(this);
+
+    //后端部分
+    player = new Player();
+    duration_timer = new QTimer(this);
+
+    //初始化波形图播放器指针
+    video->getWaveform()->setPlayer(player);
+
     duration_slider = video->getPc()->getDuration_slider();
     duration_label = video->getPc()->getDuration_label();
     playerControls = video->getPc();
@@ -68,9 +76,12 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     layout->addWidget(playList, 1);
     setLayout(layout);
 
-    //后端部分
-    player = new Player();
-    duration_timer = new QTimer(this);
+//    //后端部分
+//    player = new Player();
+//    duration_timer = new QTimer(this);
+
+//    //初始化波形图播放器指针
+//    video->getWaveform()->setPlayer(player);
 
     //播放初始化
     initPlay();
@@ -180,6 +191,7 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
         if(isPlay) duration_timer->start();
         player->Jump(value);
         currentDuration = value;
+        duration_slider->setValue(currentDuration);
     });
     //改变进度微调大小
     connect(playerControls, &PlayerControls::durationStep_signal, this, [&](int value) {
@@ -229,8 +241,11 @@ InfinityPlayer::InfinityPlayer(QWidget *parent)
     });
 
 
-    //初始化波形图播放器指针
-    video->getWaveform()->setPlayer(player);
+
+
+    connect(video, &myfullscreen::keyEvent, this, [&](QKeyEvent *event) {
+        keyPressEvent(event);
+    });
 }
 
 InfinityPlayer::~InfinityPlayer()
@@ -348,7 +363,6 @@ void InfinityPlayer::playMedia(QString path)
 {
     initPlay();
     video->getVw()->setVisible(true);
-    qDebug() << playList->getPlayList_listView()->isAudio(path);
     player->Play(path.toStdString().c_str(), playList->getPlayList_listView()->isAudio(path), (void*)video->getVw()->winId());
     playHistory.append(path);
     curPlayHistory = playHistory.size() - 1;
@@ -359,12 +373,15 @@ void InfinityPlayer::playMedia(QString path)
     if(player->isVideo()) {
         video->getWaveform()->hide();
         video->getPc()->getVolumeGraphy_button()->setEnabled(false);
+        video->getTm()->start();
     }
     else
     {
         video->getWaveform()->show();
         video->getPc()->getVolumeGraphy_button()->setEnabled(true);
         video->getWaveform()->setPath(playList->getPlayList_listView()->getCover(path));
+        video->getTm()->stop();
+        video->getPc()->setVisible(true);
     }
     player->SetSpeed(currentPlaySpeed);
     player->SetVolume(currentVolume);
@@ -403,7 +420,6 @@ void InfinityPlayer::initPlay()
 void InfinityPlayer::on_preMedia(QString path)
 {
     initPlay();
-    video->update();
     video->getVw()->setVisible(true);
     isPlay = true;
     duration_slider->setEnabled(true);
@@ -413,16 +429,19 @@ void InfinityPlayer::on_preMedia(QString path)
     if(player->isVideo()) {
         video->getWaveform()->hide();
         video->getPc()->getVolumeGraphy_button()->setEnabled(false);
+        video->getTm()->start();
     }
     else
     {
         video->getWaveform()->show();
         video->getPc()->getVolumeGraphy_button()->setEnabled(true);
         video->getWaveform()->setPath(playList->getPlayList_listView()->getCover(path));
+        video->getTm()->stop();
+        video->getPc()->setVisible(true);
     }
     player->SetVolume(currentVolume);
     player->SetSpeed(currentPlaySpeed);
-    mediaDuration = player->GetTotalDuration() * 10;
+    mediaDuration = player->GetTotalDuration();
     int cur = mediaDuration + 0.5;
     QString str = secTotime(cur / 100);
     mediaDuration_str = str;
@@ -449,12 +468,12 @@ myfullscreen *InfinityPlayer::getVideo() const
 void InfinityPlayer::keyPressEvent(QKeyEvent *event)
 {
     //上一首
-    if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_D) {
+    if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_A) {
         if(playList->getPlayList_listView()->totalMedia() != 0)
             playList->getPlayList_listView()->preOne(playHistory, curPlayHistory);
     }
     //下一首
-    else if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_A) {
+    else if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_D) {
         if(playList->getPlayList_listView()->totalMedia() != 0)
             playList->getPlayList_listView()->nextOne();
     }
@@ -470,13 +489,13 @@ void InfinityPlayer::keyPressEvent(QKeyEvent *event)
     }
     //进度微调
     else if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Left) {
-        qDebug() << currentDurationStep;
+        //qDebug() << currentDurationStep;
         player->Backward(currentDurationStep);
         currentDuration = player->MyGetCurrentTime();
         duration_slider->setValue(currentDuration);
     }
     else if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Right) {
-        qDebug() << currentDurationStep;
+        //qDebug() << currentDurationStep;
         player->Forward(currentDurationStep);
         currentDuration = player->MyGetCurrentTime();
         duration_slider->setValue(currentDuration);

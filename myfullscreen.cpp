@@ -3,6 +3,8 @@
 myfullscreen::myfullscreen(QWidget *parent)
     : QWidget{parent}
 {
+
+    this->grabKeyboard();
     //加载qss样式文件
     QFile file(":/qss/myFullScreen.qss");
     file.open(QFile::ReadOnly);
@@ -13,6 +15,7 @@ myfullscreen::myfullscreen(QWidget *parent)
     resize(530, 480);
     vw = new QWidget(this);
     vw->setObjectName("vw");
+    waveform.setParent(this);//here
     pc = new PlayerControls(this);
     pc->setWindowFlags(Qt::WindowStaysOnTopHint);
 
@@ -29,8 +32,8 @@ myfullscreen::myfullscreen(QWidget *parent)
     connect(tm, &QTimer::timeout, this, &myfullscreen::turnToInvisable);
     vw->setUpdatesEnabled(false);
 
-    //波形图
-    waveform.setParent(this);
+//    //波形图
+//    waveform.setParent(this);
 }
 
 //设置位置
@@ -75,6 +78,11 @@ Waveform *myfullscreen::getWaveform()
     return &waveform;
 }
 
+QTimer *myfullscreen::getTm() const
+{
+    return tm;
+}
+
 void myfullscreen::turnToFullScreen() {
     pcLifeTime=10;
     setWindowFlags(Qt::Window);
@@ -110,5 +118,9 @@ void myfullscreen::mouseMoveEvent(QMouseEvent *e)
 {
     this->QWidget::mouseMoveEvent(e);
     pcLifeTime = 10;
+}
+
+void myfullscreen::keyPressEvent(QKeyEvent *event) {
+    emit keyEvent(event);
 }
 

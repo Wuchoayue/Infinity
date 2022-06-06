@@ -32,7 +32,9 @@ Waveform::Waveform(QWidget *parent)
 
     style = "b";
     paintFlag = false;
-    QTimer::singleShot(delay, this,SLOT(onTimer()));
+    QTimer::singleShot(0, this,SLOT(loadData()));//加载数据
+    connect(&timer,&QTimer::timeout,this,&Waveform::onTimer);//绘图
+    timer.start(delay);
     filepath=":/icon/background.png";
 }
 
@@ -46,9 +48,8 @@ void Waveform::paintEvent(QPaintEvent *e)
     if(paintFlag)
     {
         QPainter painter(this);
-
-        bufSize = player->GetAudioBuf(&buf);// 获取缓冲区地址
-        short* data = (short*)buf;
+        //bufSize = player->GetAudioBuf(&buf);// 获取缓冲区地址
+        //short* data = (short*)buf;
         if (bufSize !=-1 && bufSize/4>numSamples)//返回的pcm点大于采样点
         {
             int delta = (bufSize/numSamples)/4;
@@ -125,7 +126,18 @@ void Waveform::onTimer()
     // 一直开
     update();
     //if(paintFlag)
-    QTimer::singleShot(delay, this,SLOT(onTimer()));
+    //QTimer::singleShot(delay, this,SLOT(onTimer()));
+
+}
+
+void Waveform::loadData()
+{
+    if(paintFlag)
+    {
+        bufSize = player->GetAudioBuf(&buf);// 获取缓冲区地址
+        data = (short*)buf;
+    }
+    QTimer::singleShot(delay, this,SLOT(loadData()));
 
 }
 

@@ -170,15 +170,32 @@ void AllocatePicture(AVInfo *av, VideoPicture *vp)
     }
 }
 
-//获取实际的音频时间
+//获取实际的音频时间，返回-1表示没有音频
 double GetAudioTime(AVInfo *av)
 {
+    if(av->audio_idx < 0) return -1; //不存在音频，返回-1
+
     double pts = av->audio_pts;
     int nb_samples = av->audio_buf_size / av_get_channel_layout_nb_channels(AV_CH_LAYOUT_STEREO) / 2;//缓存帧的采样数
     double frame_time = 1.0 * nb_samples / av->aCodecCtx->sample_rate;//缓存帧的时长
     pts -= frame_time * (av->audio_buf_size - av->audio_buf_idx) / av->audio_buf_size;
 
     return pts;
+}
+
+//获取实际的视频时间，返回-1表示没有视频
+double GetVideoTime(AVInfo *av)
+{
+    if(av->video_idx < 0) return -1; //不存在视频，返回-1
+
+    return av->pre_vpts;
+}
+
+//获取主时钟时间，音频存在返回音频时间，否则返回视频时钟
+double GetMainTime(AVInfo *av)
+{
+    if(av->audio_idx >= 0) return GetAudioTime(av);
+    else return GetVideoTime(av);
 }
 
 //音频倍速处理函数
@@ -630,27 +647,31 @@ int VideoRefresh(void *user_data)
     }
 
     //判断视频时间戳和音频时间戳的相对快慢，并进行相应调整
-    double diff = vp->pts - GetAudioTime(av);
-    if (fabs(diff) < 5)
+    double apts = GetAudioTime(av);
+    if(apts >= 0)
     {
-        if (diff < -delay)//视频慢了，快速播放下一帧
+        double diff = vp->pts - apts;
+        if (fabs(diff) < 5)
         {
-            delay = 0;
+            if (diff < -delay)//视频慢了，快速播放下一帧
+            {
+                delay = 0;
+            }
+            else if (diff > delay)//视频快了，延迟播放下一帧
+            {
+                delay = 2 * delay;
+            }
         }
-        else if (diff > delay)//视频快了，延迟播放下一帧
+        else //时差过大的话就已经不是同步问题了
         {
-            delay = 2 * delay;
-        }
-    }
-    else //时差过大的话就已经不是同步问题了
-    {
-        if (diff < 0)//视频慢了，快速播放下一帧
-        {
-            delay = 0;
-        }
-        else if (diff > 0)//视频快了，延迟播放下一帧
-        {
-            delay = 2 * delay;
+            if (diff < 0)//视频慢了，快速播放下一帧
+            {
+                delay = 0;
+            }
+            else if (diff > 0)//视频快了，延迟播放下一帧
+            {
+                delay = 2 * delay;
+            }
         }
     }
 
@@ -1016,7 +1037,6 @@ int LoadDataThread(void *user_data)
             return 0;
         }
 
-
         //获取音频帧数据
         SDL_LockMutex(av->abuf_mutex);
         //SDL_CondWait(av->cond_waveform, av->abuf_mutex); //等待新的音频帧解码出来
@@ -1027,13 +1047,11 @@ int LoadDataThread(void *user_data)
             SDL_UnlockMutex(av->abuf_mutex_waveform);
             return 0;
         }
-
         //访问共享区，进行处理
         av->audio_buf_size_waveform = av->audio_buf_size;
         memcpy_s(av->audio_buf_waveform, av->audio_buf_size_waveform, av->audio_buf, av->audio_buf_size);
         //处理结束，离开共享区
         SDL_UnlockMutex(av->abuf_mutex);
-
         SDL_CondSignal(av->abuf_cond_read_waveform);
         SDL_UnlockMutex(av->abuf_mutex_waveform);
     }
@@ -1074,7 +1092,7 @@ int ParseThread(void *user_data)
     av->video_idx = av->audio_idx = -1;
     for (unsigned int i = 0; i < av->avFormatCtx->nb_streams; ++i)
     {
-        if (!av->type && av->avFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO && av->video_idx < 0)
+        if (!av->type_music && av->avFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO && av->video_idx < 0)
         {
             av->video_idx = i;
             continue;
@@ -1085,6 +1103,9 @@ int ParseThread(void *user_data)
             continue;
         }
     }
+
+    //测试一下
+    //av->audio_idx = -1;
 
     //没有视频和音频，退出
     if (av->video_idx == -1 && av->audio_idx == -1)
@@ -1371,7 +1392,7 @@ int CreateVideo(AVInfo *av)
             case SDLK_LEFT://快退8秒
                 if (!av->seeking)
                 {
-                    double tar_pts = GetAudioTime(av) - 8;
+                    double tar_pts = GetMainTime(av) - 8;
                     JumpToPts(av, tar_pts);
                     av->seeking = 1;
                     while (av->seeking != 2)
@@ -1384,7 +1405,7 @@ int CreateVideo(AVInfo *av)
             case SDLK_RIGHT://快进8秒
                 if (!av->seeking)
                 {
-                    double tar_pts = GetAudioTime(av) + 8;
+                    double tar_pts = GetMainTime(av) + 8;
                     JumpToPts(av, tar_pts);
                     av->seeking = 1;
                     while (av->seeking != 2)
@@ -1644,11 +1665,11 @@ void Player::Play(const char input_file[], bool isMusic, void * wid)
     av->wid = wid;
     if(isMusic)
     {
-        av->type = 1;
+        av->type_music = 1;
     }
     else
     {
-        av->type = 0;
+        av->type_music = 0;
     }
 
     //初始化SDL
@@ -1695,7 +1716,7 @@ double Player::GetTotalDuration()
 double Player::MyGetCurrentTime()
 {
     if(!Playing()) return -1;
-    return GetAudioTime(av) * 100;
+    return GetMainTime(av) * 100;
 }
 
 //获取指定时刻的帧画面，单位10ms
@@ -1753,7 +1774,7 @@ void Player::Backward(double t)
     if(!Playing()) return;
     if (!av->seeking)
     {
-        double tar_pts = GetAudioTime(av) - t;
+        double tar_pts = GetMainTime(av) - t;
         JumpToPts(av, tar_pts);
         av->seeking = 1;
         while(av->seeking != 2)
@@ -1771,7 +1792,7 @@ void Player::Forward(double t)
     if(!Playing()) return;
     if (!av->seeking)
     {
-        double tar_pts = GetAudioTime(av) + t;
+        double tar_pts = GetMainTime(av) + t;
         JumpToPts(av, tar_pts);
         av->seeking = 1;
         while(av->seeking != 2)
@@ -1875,10 +1896,8 @@ int Player::GetAudioBuf(Uint8 **audio_buf)
     }
 
     SDL_LockMutex(av->abuf_mutex_waveform);
-    SDL_CondSignal(av->abuf_cond_write_waveform); //告诉后台线程可以去读取音频帧数据了
-    SDL_UnlockMutex(av->abuf_mutex_waveform);
 
-    SDL_LockMutex(av->abuf_mutex_waveform);
+    SDL_CondSignal(av->abuf_cond_write_waveform); //告诉后台线程可以去读取音频帧数据了
 
     SDL_CondWait(av->abuf_cond_read_waveform, av->abuf_mutex_waveform); //等待后台线程读取完音频帧数据再返回前端使用
 

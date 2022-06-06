@@ -1,5 +1,9 @@
 QWidget#volumeControl {
     background-color: rgb(218, 218, 218);
+    border-top: 2px solid qlineargradient(y0:0, y1:1,stop: 0 white, stop: 1 #ececef);
+    border-left: 2px solid qlineargradient(x0:0, x1:1,stop: 0 white, stop: 1 #ececef);
+     border-bottom: 5px solid qlineargradient(y0:0, y1:1,stop: 0 #ececef, stop: 1  white);
+    border-right: 2px solid qlineargradient(x0:0, x1:1,stop:  0 #ececef, stop: 1 white);
 }
 
 QToolButton#volume {

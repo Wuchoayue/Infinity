@@ -28,8 +28,8 @@
         <file>icon/default.svg</file>
         <file>icon/pause.svg</file>
         <file>icon/pause.png</file>
-        <file>qss/volumeControl.qss</file>
         <file>icon/showList_visible.png</file>
         <file>icon/background.png</file>
+        <file>qss/volumeControl.qss</file>
     </qresource>
 </RCC>

@@ -44,6 +44,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         ${QRC_FILES}
+        exeIcon.rc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Infinity APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
